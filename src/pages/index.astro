@@ -26,6 +26,31 @@ const screenshots = [
 	{ src: '/images/3.png', alt: 'DevDock application — detail view' },
 ];
 
+/** Flat grid under “Why you should use DevTools”: image + title + subtext + link (no card chrome). */
+const featureColumns = [
+	{
+		img: screenshots[0],
+		title: 'Orchestration without the scavenger hunt',
+		body: 'Start and stop NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, and sql-web from one place. Bundled binaries sync into a fixed tree so paths stay consistent across machines.',
+		href: '/about',
+		linkLabel: 'Learn more',
+	},
+	{
+		img: screenshots[1],
+		title: 'Logs you can actually read',
+		body: 'Structured logs show in LogsConsole and on disk under your DevDock logs folder. When something fails, filter by service first, then open the matching log or NGINX error log for detail.',
+		href: '/about',
+		linkLabel: 'Learn more',
+	},
+	{
+		img: screenshots[2],
+		title: 'Extras in one window',
+		body: 'HTTP Client for local APIs, SQLite One-Click, Rust workspace helpers, and DNS and HTTPS tools—workflows that usually sprawl across separate apps.',
+		href: '/about',
+		linkLabel: 'Learn more',
+	},
+];
+
 const faq = [
 	{
 		q: 'What is DevDock?',
@@ -272,7 +297,7 @@ const integrations = [
 		</div>
 	</section>
 
-	<!-- Features (Webflow-style: visual block + title + body + link) -->
+	<!-- Features: flat grid — rounded image, title, subtext, link (no card chrome) -->
 	<section class="section section--light featuresSection">
 		<div class="container container--wide featuresWrap">
 			<div class="sectionIntro sectionIntro--center featuresHeroIntro" data-reveal>
@@ -283,84 +308,32 @@ const integrations = [
 					processes that use them.
 				</p>
 			</div>
-			<div class="featuresGrid featuresGridSpotlight" data-reveal-stagger>
-				<article class="featureCardSpotlight" data-reveal-item>
-					<div class="featureCardVisual" aria-hidden="true">
-						<div class="featureCodeChrome">
-							<span class="featureCodeDots" />
-							<span class="featureCodeFile">orchestrator — tauri</span>
+			<div class="featuresGrid featuresGridFlat" data-reveal-stagger>
+				{featureColumns.map((col) => (
+					<article class="featureCell border-2 border-gray-200 rounded-lg" data-reveal-item>
+						<div class="featureMedia">
+							<img
+								src={col.img.src}
+								alt={col.img.alt}
+								width={1200}
+								height={800}
+								loading="lazy"
+								decoding="async"
+							/>
 						</div>
-						<pre class="featureSnippet featureSnippetFill"><code>{`# services synced to runtime
-C:\\DevDock\\
-  nginx\\  php\\  mysql\\  mailpit\\
-invoke("start_service", { name: "nginx" })`}</code></pre>
-					</div>
-					<div class="featureCardCopy">
-						<h3 class="featureCardTitle">Orchestration without the scavenger hunt</h3>
-						<p class="featureCardDesc">
-							Start and stop NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, and sql-web from one place. Bundled binaries
-							sync into a fixed tree so paths stay consistent across machines.
-						</p>
-						<a class="featureCardLink" href="/about">
-							Learn more <ArrowRight size={16} stroke-width={2} />
-						</a>
-					</div>
-				</article>
-				<article class="featureCardSpotlight" data-reveal-item>
-					<div class="featureCardVisual" aria-hidden="true">
-						<div class="featureCodeChrome">
-							<span class="featureCodeDots" />
-							<span class="featureCodeFile">LogsConsole — tail</span>
-						</div>
-						<pre class="featureSnippet featureSnippetFill"><code>{`C:\\DevDock\\logs\\
-  nginx.log
-  php.log
-  mysql.log
-# filter by service in UI`}</code></pre>
-					</div>
-					<div class="featureCardCopy">
-						<h3 class="featureCardTitle">Logs you can actually read</h3>
-						<p class="featureCardDesc">
-							Structured logs show in <strong>LogsConsole</strong> and on disk under <code>C:\DevDock\logs\</code>.
-							When something fails, filter by service first—then open the matching <code>.log</code> or NGINX’s
-							<code>error.log</code>.
-						</p>
-						<a class="featureCardLink" href="/about">
-							Learn more <ArrowRight size={16} stroke-width={2} />
-						</a>
-					</div>
-				</article>
-				<article class="featureCardSpotlight" data-reveal-item>
-					<div class="featureCardVisual" aria-hidden="true">
-						<div class="featureCodeChrome">
-							<span class="featureCodeDots" />
-							<span class="featureCodeFile">src/pages/Dashboard.tsx</span>
-						</div>
-						<pre class="featureSnippet featureSnippetFill"><code>{`tabs: [
-  "HTTP Client",    // reqwest, no CORS
-  "SQLite One-Click",
-  "Rust Workspace",
-  "DNS & HTTPS"
-]`}</code></pre>
-					</div>
-					<div class="featureCardCopy">
-						<h3 class="featureCardTitle">Extras in one window</h3>
-						<p class="featureCardDesc">
-							<strong>HTTP Client</strong> for local APIs without CORS. <strong>SQLite One-Click</strong>,
-							<strong>Rust Workspace</strong>, and <strong>DNS &amp; HTTPS</strong> tabs—workflows that usually sprawl
-							across separate tools.
-						</p>
-						<a class="featureCardLink" href="/about">
-							Learn more <ArrowRight size={16} stroke-width={2} />
-						</a>
-					</div>
-				</article>
+						<h3 class="featureCellTitle">{col.title}</h3>
+						<p class="featureCellDesc">{col.body}</p>
+						{/* <a class="featureCellLink" href={col.href}>
+							{col.linkLabel} <ArrowRight size={16} stroke-width={2} />
+						</a> */}
+					</article>
+				))}
 			</div>
-			<div class="midCta" data-reveal>
+			<!-- <div class="midCta" data-reveal>
 				<a class="textCta" href="/about">
 					Read the full story <ArrowRight size={16} />
 				</a>
-			</div>
+			</div> -->
 		</div>
 	</section>
 
@@ -913,133 +886,70 @@ invoke("start_service", { name: "nginx" })`}</code></pre>
 		font-weight: 600;
 	}
 
-	/* Spotlight cards: large visual (code) + copy block (Webflow-style) */
-	.featureCardSpotlight {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		min-height: 0;
-		border-radius: 16px;
-		overflow: hidden;
-		background: #fff;
-		border: 1px solid rgba(0, 0, 0, 0.06);
-		box-shadow:
-			0 1px 2px rgba(0, 0, 0, 0.04),
-			0 16px 48px rgba(0, 0, 0, 0.07);
+	/* Flat feature grid: image (rounded) + text — no borders or card shadow */
+	.featuresGridFlat {
+		gap: 48px 44px;
 	}
-	.featureCardVisual {
-		display: flex;
-		flex-direction: column;
-		flex: 1 1 62%;
-		min-height: 280px;
-		aspect-ratio: 4 / 5;
-		max-height: 420px;
-		background: #1c1c1e;
-	}
-	.featureCodeChrome {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		flex-shrink: 0;
-		padding: 10px 14px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-		background: rgba(0, 0, 0, 0.25);
-	}
-	.featureCodeDots {
-		display: inline-block;
-		width: 38px;
-		height: 10px;
-		position: relative;
-		flex-shrink: 0;
-	}
-	.featureCodeDots::before {
-		content: '';
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		background: #ff5f57;
-		box-shadow: 14px 0 0 #febc2e, 28px 0 0 #28c840;
-	}
-	.featureCodeFile {
-		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-		font-size: 11px;
-		letter-spacing: 0.02em;
-		color: rgba(255, 255, 255, 0.42);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		max-width: 55%;
-	}
-	.featureSnippet {
+	.featureCell {
 		margin: 0;
-		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-		font-size: 12px;
-		line-height: 1.5;
-		color: rgba(235, 235, 245, 0.75);
-		overflow-x: auto;
-		tab-size: 2;
-	}
-	.featureSnippetFill {
-		flex: 1;
-		min-height: 0;
-		padding: 14px 16px 20px;
-	}
-	.featureSnippet code {
-		font: inherit;
-		white-space: pre-wrap;
-		word-break: break-word;
-	}
-	.featureCardCopy {
-		flex: 0 0 auto;
-		padding: 22px 22px 26px;
+		padding: 0;
+		background: none;
+		border: none;
+		box-shadow: none;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
 		text-align: left;
+		min-width: 0;
 	}
-	.featureCardTitle {
-		font-family: var(--font-display);
-		font-size: 21px;
-		font-weight: 600;
-		line-height: 1.2;
-		letter-spacing: -0.02em;
+	.featureMedia {
 		margin: 0;
+		padding: 0;
+		border-radius: 14px;
+		overflow: hidden;
+		background: #e8e8ed;
+	}
+	.featureMedia img {
+		display: block;
+		width: 100%;
+		height: auto;
+		vertical-align: middle;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		object-position: top center;
+	}
+	.featureCellTitle {
+		margin: 18px 0 0;
+		font-family: var(--font-display);
+		font-size: 19px;
+		font-weight: 600;
+		line-height: 1.25;
+		letter-spacing: -0.02em;
 		color: var(--c-text-dark);
 	}
-	.featureCardDesc {
-		margin: 12px 0 0;
+	.featureCellDesc {
+		margin: 10px 0 0;
 		font-size: 15px;
-		line-height: 1.53;
+		line-height: 1.5;
 		letter-spacing: -0.2px;
-		color: rgba(0, 0, 0, 0.55);
+		color: rgba(0, 0, 0, 0.52);
 	}
-	.featureCardDesc :global(strong) {
-		font-weight: 600;
-		color: rgba(0, 0, 0, 0.78);
-	}
-	.featureCardDesc :global(code) {
-		font-size: 0.88em;
-		padding: 2px 5px;
-		border-radius: 5px;
-		background: rgba(0, 0, 0, 0.06);
-		color: rgba(0, 0, 0, 0.82);
-	}
-	.featureCardLink {
+	.featureCellLink {
 		display: inline-flex;
 		align-items: center;
+		align-self: flex-start;
 		gap: 6px;
-		margin-top: 18px;
+		margin-top: 14px;
 		font-size: 15px;
 		font-weight: 500;
 		color: var(--c-link-light);
-		text-decoration: none;
-	}
-	.featureCardLink:hover {
 		text-decoration: underline;
 		text-underline-offset: 3px;
 	}
-	.featureCardLink :global(svg) {
+	.featureCellLink:hover {
+		text-decoration-thickness: 2px;
+	}
+	.featureCellLink :global(svg) {
 		flex-shrink: 0;
 	}
 
@@ -1069,20 +979,12 @@ invoke("start_service", { name: "nginx" })`}</code></pre>
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 28px 36px;
-		align-items: stretch;
-	}
-	.featuresGridSpotlight {
-		gap: 40px 36px;
+		align-items: start;
 	}
 	@media (max-width: 1024px) {
 		.featuresGrid {
 			grid-template-columns: 1fr;
-			gap: 28px;
-		}
-		.featureCardVisual {
-			max-height: none;
-			aspect-ratio: auto;
-			min-height: 260px;
+			gap: 40px;
 		}
 	}
 
