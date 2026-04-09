@@ -1,0 +1,198 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+import { ArrowRight } from '@lucide/astro';
+import { SITE_NAME } from '../config/site';
+
+const entries = await getCollection('tutorials');
+const tutorial =
+	entries.find((e) => e.id === 'devdock' || e.id.endsWith('devdock')) ?? entries[0];
+
+if (!tutorial) {
+	throw new Error(
+		'No tutorials found. Add src/content/tutorials/devdock.md (see src/content.config.ts) and restart the dev server.'
+	);
+}
+
+const { Content, headings } = await render(tutorial);
+const videoEmbedUrl = tutorial.data.videoEmbedUrl;
+
+type TocHeading = { depth: number; slug: string; text: string };
+const tocHeadings = (headings as TocHeading[]).filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+<Layout
+	title={`How to use — ${SITE_NAME}`}
+	description="Install DevDock, use C:\DevDock, start NGINX and PHP, and work through the main tabs—local Windows dev suite."
+>
+	<section class="section section--dark">
+		<div class="container">
+			<h1 class="displayHero">How to use {SITE_NAME}</h1>
+			<p class="lede ledeDark">{tutorial.data.description ?? 'A quick walkthrough of the workflow.'}</p>
+
+			{videoEmbedUrl ? (
+				<div class="videoWrap" aria-label="Tutorial video">
+					<iframe
+						class="video"
+						src={videoEmbedUrl}
+						title={`${SITE_NAME} tutorial video`}
+						loading="lazy"
+						referrerpolicy="strict-origin-when-cross-origin"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						allowfullscreen
+					/>
+				</div>
+			) : null}
+		</div>
+	</section>
+
+	<section class="section section--light">
+		<div class="tutorialShell">
+			<div class="tutorialGrid">
+			<aside class="toc" aria-label="On this page">
+				<p class="tocTitle">On this page</p>
+				<nav class="tocNav">
+					{tocHeadings.map((h) => (
+						<a class={`tocLink tocLinkDepth${h.depth}`} href={`#${h.slug}`}>
+							{h.text}
+						</a>
+					))}
+				</nav>
+				<a class="btnPillLink tocCta" href="/about">
+					About {SITE_NAME} <ArrowRight size={16} />
+				</a>
+			</aside>
+
+			<article class="doc">
+				<Content />
+			</article>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.ledeDark {
+		color: rgba(255, 255, 255, 0.88);
+	}
+
+	.videoWrap {
+		margin-top: 26px;
+		border-radius: var(--radius-12);
+		overflow: hidden;
+		background: #111;
+		box-shadow: rgba(0, 0, 0, 0.35) 0 30px 80px;
+		aspect-ratio: 16 / 9;
+	}
+	.video {
+		width: 100%;
+		height: 100%;
+		border: 0;
+		display: block;
+	}
+
+	.tutorialShell {
+		width: min(1400px, 100%);
+		margin: 0 auto;
+		padding: 0 max(20px, env(safe-area-inset-left)) 0 max(20px, env(safe-area-inset-right));
+		box-sizing: border-box;
+	}
+
+	.tutorialGrid {
+		display: grid;
+		grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+		column-gap: clamp(56px, 7vw, 112px);
+		row-gap: 28px;
+		align-items: start;
+	}
+
+	.toc {
+		position: sticky;
+		top: 72px;
+		align-self: start;
+		padding: 20px 18px;
+		min-width: 0;
+		border-radius: var(--radius-12);
+		background: rgba(255, 255, 255, 0.7);
+		backdrop-filter: blur(20px);
+		box-shadow: var(--shadow-card);
+	}
+	.tocTitle {
+		margin: 0 0 12px;
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: -0.12px;
+		color: rgba(0, 0, 0, 0.48);
+	}
+	.tocNav {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.tocLink {
+		font-size: 13px;
+		line-height: 1.4;
+		letter-spacing: -0.12px;
+		color: rgba(0, 0, 0, 0.8);
+		border-radius: var(--radius-8);
+		padding: 8px 10px;
+	}
+	.tocLink:hover {
+		text-decoration: none;
+		background: rgba(0, 0, 0, 0.04);
+	}
+	.tocLinkDepth3 {
+		padding-left: 18px;
+		color: rgba(0, 0, 0, 0.7);
+	}
+	.tocCta {
+		margin-top: 12px;
+		display: inline-flex;
+	}
+
+	.doc :global(h2) {
+		font-family: var(--font-display);
+		font-size: 28px;
+		font-weight: 400;
+		line-height: 1.14;
+		letter-spacing: 0.196px;
+		margin: 0;
+		scroll-margin-top: 80px;
+	}
+	.doc :global(h3) {
+		font-family: var(--font-display);
+		font-size: 21px;
+		font-weight: 700;
+		line-height: 1.19;
+		letter-spacing: 0.231px;
+		margin: 18px 0 0;
+		scroll-margin-top: 80px;
+	}
+	.doc :global(p) {
+		margin: 10px 0 0;
+		font-size: 17px;
+		line-height: 1.47;
+		letter-spacing: -0.374px;
+		color: rgba(0, 0, 0, 0.8);
+		max-width: 70ch;
+	}
+	.doc :global(ul) {
+		margin: 12px 0 0;
+		padding-left: 18px;
+		color: rgba(0, 0, 0, 0.8);
+		font-size: 17px;
+		line-height: 1.47;
+		letter-spacing: -0.374px;
+	}
+
+	@media (max-width: 900px) {
+		.tutorialGrid {
+			grid-template-columns: 1fr;
+		}
+		.toc {
+			position: relative;
+			top: 0;
+		}
+	}
+</style>
+

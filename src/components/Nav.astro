@@ -1,0 +1,361 @@
+---
+import { Download, X } from '@lucide/astro';
+import { GITHUB_RELEASES_URL, SITE_NAME } from '../config/site';
+
+const navItems = [
+	{ href: '/', label: 'Overview' },
+	{ href: '/about', label: 'About' },
+	{ href: '/how-to-use', label: 'How to use' },
+];
+---
+
+<header class="navShell">
+	<div class="navInner">
+		<a class="brand" href="/" aria-label={`${SITE_NAME} home`}>
+			<span class="brandIcon" aria-hidden="true">
+				<img src="/icon/64x64.png" alt="" width="28" height="28" decoding="async" />
+			</span>
+			<span class="brandText">{SITE_NAME}</span>
+		</a>
+
+		<nav class="navLinks" aria-label="Primary">
+			{navItems.map((item) => (
+				<a class="navLink" href={item.href}>
+					{item.label}
+				</a>
+			))}
+		</nav>
+
+		<div class="navRight">
+			<a
+				class="btnNavDownloadIcon"
+				href={GITHUB_RELEASES_URL}
+				target="_blank"
+				rel="noreferrer"
+				aria-label="Download latest release"
+			>
+				<Download size={18} stroke-width={2} />
+			</a>
+			<a class="btnNavDownload" href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">
+				<Download size={17} stroke-width={2} />
+				<span>Download</span>
+			</a>
+
+			<button
+				type="button"
+				class="menuToggle"
+				aria-expanded="false"
+				aria-controls="mobile-menu"
+				id="mobile-menu-button"
+			>
+				<span class="menuToggleLines" aria-hidden="true" />
+				<span class="srOnly">Open menu</span>
+			</button>
+		</div>
+	</div>
+</header>
+
+<div class="mobileBackdrop" id="mobile-menu" hidden>
+	<div class="mobilePanel">
+		<div class="mobilePanelTop">
+			<span class="mobileTitle">{SITE_NAME}</span>
+			<button type="button" class="menuClose" id="mobile-menu-close" aria-label="Close menu">
+				<X size={22} stroke-width={2} />
+			</button>
+		</div>
+		<nav class="mobileNav" aria-label="Mobile">
+			{navItems.map((item) => (
+				<a class="mobileLink" href={item.href}>
+					{item.label}
+				</a>
+			))}
+			<a class="mobileLink mobileLinkCta" href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">
+				<Download size={18} />
+				Download
+			</a>
+		</nav>
+	</div>
+</div>
+
+<script>
+	(() => {
+		const btn = document.getElementById('mobile-menu-button');
+		const panel = document.getElementById('mobile-menu');
+		const closeBtn = document.getElementById('mobile-menu-close');
+		if (!btn || !panel) return;
+
+		const open = () => {
+			panel.hidden = false;
+			btn.setAttribute('aria-expanded', 'true');
+			document.body.classList.add('navMobileOpen');
+		};
+		const shut = () => {
+			panel.hidden = true;
+			btn.setAttribute('aria-expanded', 'false');
+			document.body.classList.remove('navMobileOpen');
+		};
+
+		btn.addEventListener('click', () => {
+			if (panel.hidden) open();
+			else shut();
+		});
+		closeBtn?.addEventListener('click', shut);
+		panel.addEventListener('click', (e) => {
+			if (e.target === panel) shut();
+		});
+		panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', shut));
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && !panel.hidden) shut();
+		});
+	})();
+</script>
+
+<style>
+	.srOnly {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	.navShell {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		height: 48px;
+		background: rgba(0, 0, 0, 0.8);
+		backdrop-filter: saturate(180%) blur(20px);
+		-webkit-backdrop-filter: saturate(180%) blur(20px);
+	}
+
+	.navInner {
+		max-width: var(--container);
+		height: 48px;
+		margin: 0 auto;
+		padding: 0 16px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		color: #fff;
+		text-decoration: none;
+		flex-shrink: 0;
+	}
+	.brand:hover {
+		text-decoration: none;
+	}
+	.brandIcon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.brandIcon img {
+		display: block;
+		width: 28px;
+		height: 28px;
+		border-radius: 6px;
+	}
+	.brandText {
+		font-family: var(--font-body);
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: -0.14px;
+	}
+
+	.navLinks {
+		display: none;
+		align-items: center;
+		gap: 6px;
+		justify-content: center;
+		flex: 1;
+	}
+	.navLink {
+		font-size: 12px;
+		letter-spacing: -0.12px;
+		color: rgba(255, 255, 255, 0.92);
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: var(--radius-8);
+	}
+	.navLink:hover {
+		text-decoration: none;
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	.navRight {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		flex-shrink: 0;
+	}
+
+	.btnNavDownloadIcon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		border-radius: var(--radius-8);
+		background: rgba(255, 255, 255, 0.12);
+		color: #fff;
+		text-decoration: none;
+	}
+	.btnNavDownloadIcon:hover {
+		text-decoration: none;
+		background: rgba(255, 255, 255, 0.18);
+	}
+
+	.btnNavDownload {
+		display: none;
+		align-items: center;
+		gap: 8px;
+		padding: 7px 14px;
+		border-radius: var(--radius-8);
+		background: var(--c-accent);
+		color: #fff;
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: -0.12px;
+		text-decoration: none;
+		border: none;
+	}
+	.btnNavDownload:hover {
+		text-decoration: none;
+		filter: brightness(1.06);
+	}
+
+	.menuToggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		margin: 0;
+		padding: 0;
+		border: none;
+		border-radius: var(--radius-8);
+		background: transparent;
+		color: #fff;
+		cursor: pointer;
+	}
+	.menuToggle:hover {
+		background: rgba(255, 255, 255, 0.1);
+	}
+	.menuToggleLines {
+		display: block;
+		width: 18px;
+		height: 2px;
+		background: #fff;
+		border-radius: 1px;
+		box-shadow:
+			0 -6px 0 #fff,
+			0 6px 0 #fff;
+	}
+
+	@media (min-width: 681px) {
+		.navLinks {
+			display: flex;
+		}
+		.btnNavDownloadIcon {
+			display: none;
+		}
+		.btnNavDownload {
+			display: inline-flex;
+		}
+		.menuToggle {
+			display: none;
+		}
+	}
+
+	/* Full-screen mobile menu */
+	.mobileBackdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 200;
+		background: rgba(0, 0, 0, 0.94);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		padding: 0;
+		margin: 0;
+		border: none;
+		display: flex;
+		flex-direction: column;
+	}
+	.mobileBackdrop[hidden] {
+		display: none;
+	}
+	.mobilePanel {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: 16px;
+		max-width: 100%;
+	}
+	.mobilePanelTop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-bottom: 20px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	}
+	.mobileTitle {
+		font-size: 17px;
+		font-weight: 600;
+		color: #fff;
+		letter-spacing: -0.3px;
+	}
+	.menuClose {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border: none;
+		border-radius: var(--radius-8);
+		background: rgba(255, 255, 255, 0.1);
+		color: #fff;
+		cursor: pointer;
+	}
+	.mobileNav {
+		display: flex;
+		flex-direction: column;
+		padding-top: 24px;
+		gap: 4px;
+	}
+	.mobileLink {
+		font-size: 28px;
+		font-weight: 500;
+		letter-spacing: -0.5px;
+		color: rgba(255, 255, 255, 0.95);
+		text-decoration: none;
+		padding: 14px 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+	.mobileLink:hover {
+		text-decoration: none;
+		color: #fff;
+	}
+	.mobileLinkCta {
+		display: inline-flex;
+		align-items: center;
+		gap: 12px;
+		margin-top: 16px;
+		padding: 16px 20px;
+		border-radius: var(--radius-8);
+		background: var(--c-accent);
+		border: none;
+		font-size: 17px;
+		color: #fff;
+	}
+</style>

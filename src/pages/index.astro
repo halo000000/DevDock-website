@@ -1,11 +1,1275 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import {
+	ArrowRight,
+	CheckCircle2,
+	ChevronDown,
+	ChevronRight,
+	Database,
+	Download,
+	Globe,
+	HelpCircle,
+	Layers,
+	LayoutGrid,
+	Mail,
+	Server,
+	Shield,
+	Table,
+	Terminal,
+	Zap,
+} from '@lucide/astro';
+import { GITHUB_RELEASES_URL, SITE_NAME } from '../config/site';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const screenshots = [
+	{ src: '/images/1.png', alt: 'DevDock application — dashboard and services' },
+	{ src: '/images/2.png', alt: 'DevDock application — workspace' },
+	{ src: '/images/3.png', alt: 'DevDock application — detail view' },
+];
+
+const faq = [
+	{
+		q: 'What is DevDock?',
+		a: 'DevDock is a Windows-focused local development suite: one desktop app (Tauri 2 + React) that orchestrates NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, sql-web, and related tools—so you are not hand-assembling XAMPP-style stacks.',
+	},
+	{
+		q: 'Is DevDock only for Windows?',
+		a: 'Yes. Paths, runtime layout, and service integration are built around Windows (for example everything lives under C:\\DevDock). Use Node.js, Rust, and Windows to build and run the app from source.',
+	},
+	{
+		q: 'What is C:\\DevDock?',
+		a: 'That is the fixed runtime root: synced binaries, nginx\\html for your site, php\\, mysql\\, logs\\, config\\ JSON files, templates, and SQLite defaults. The app ensures this tree exists on startup and copies bundled services from the app resources.',
+	},
+	{
+		q: 'Where do I put my website files?',
+		a: 'Put HTML, PHP, and assets under C:\\DevDock\\nginx\\html\\. With NGINX and the PHP worker running, open http://localhost/ — static files are served by NGINX and *.php is proxied to the PHP built-in server on 127.0.0.1:9000.',
+	},
+	{
+		q: 'Which ports does DevDock use by default?',
+		a: 'Typical defaults: NGINX http://localhost (port 80), PHP worker 127.0.0.1:9000, MySQL 3306, Mailpit SMTP 1025 and UI 8025, phpMyAdmin http://127.0.0.1:8080, sql-web often 8090 (see sql-web.json). Exact values are in your configs.',
+	},
+	{
+		q: 'How do I download DevDock?',
+		a: 'Use the Download button to open GitHub Releases and grab the latest Windows installer or artifact from your build pipeline (for example output from npm run tauri build under src-tauri/target/release/).',
+	},
+	{
+		q: 'What is the HTTP Client tab for?',
+		a: 'It sends HTTP requests through Rust (reqwest) so you can exercise local APIs without browser CORS blocking you—useful for APIs you are developing against NGINX/PHP.',
+	},
+	{
+		q: 'How do logs work?',
+		a: 'The LogsConsole tab aggregates lines per service with filtering. On disk, look under C:\\DevDock\\logs\\ (e.g. nginx.log, php.log, mysql.log) and NGINX’s own error log under the nginx logs directory.',
+	},
+	{
+		q: 'Can I edit configs inside the app?',
+		a: 'Yes where supported: NGINX, php.ini, MySQL, FTP, sql-web, DNS & HTTPS JSON, etc. Saving may restart the related service if it is already running.',
+	},
+	{
+		q: 'PHP will not execute—only download. Why?',
+		a: 'Confirm the PHP service is running, port 9000 is free, and check php.log plus NGINX error.log. NGINX must proxy *.php to the PHP worker; auto-start options in nginx.conf can tie the two together.',
+	},
+	{
+		q: 'What is DevDock built with?',
+		a: 'Tauri 2 (Rust) for the shell and service orchestration, React + Vite for the UI, and bundled upstream binaries for NGINX, PHP, MySQL/MariaDB, Mailpit, phpMyAdmin, and related tools—see your repo’s services-binares trees.',
+	},
+	{
+		q: 'What about licenses?',
+		a: 'Add a LICENSE file at the repo root if you open-source the project. Bundled third-party binaries remain under their upstream licenses; redistribute only in compliance with those terms.',
+	},
+];
+
+/** Bundled / orchestrated services (from project documentation). */
+const integrations = [
+	{ name: 'NGINX', Icon: Globe },
+	{ name: 'PHP', Icon: Terminal },
+	{ name: 'MySQL', Icon: Database },
+	{ name: 'Mailpit', Icon: Mail },
+	{ name: 'phpMyAdmin', Icon: Table },
+	{ name: 'FTP', Icon: Server },
+	{ name: 'SQL Web', Icon: Layers },
+] as const;
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+	title={`${SITE_NAME} — Local dev suite for Windows`}
+	description="DevDock bundles NGINX, PHP, MySQL, Mailpit, phpMyAdmin, and more behind one Tauri desktop app. Download from GitHub Releases."
+>
+	<!-- Hero -->
+	<section class="hero section section--dark">
+		<div class="container heroGrid">
+			<div class="heroCopy" data-hero-intro>
+				<p class="eyebrow" data-hero-line>Windows · Tauri 2 · Local stack</p>
+				<h1 class="displayHero heroHeadline" data-hero-line>{SITE_NAME}</h1>
+				<p class="heroSub" data-hero-line>
+					A single desktop app that orchestrates NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, sql-web, and more—synced
+					into <strong>C:\DevDock</strong> so you stop juggling XAMPP-style installs by hand.
+				</p>
+				<div class="heroActions" data-hero-line>
+					<a class="btnPrimary heroPrimary" href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">
+						<Download size={18} stroke-width={2} />
+						Download (GitHub Releases)
+					</a>
+					<a class="heroLink" href="/how-to-use">
+						How to use DevDock
+						<ChevronRight size={18} stroke-width={2} aria-hidden="true" />
+					</a>
+				</div>
+				<ul class="heroMeta" data-hero-line>
+					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> Structured logs &amp; LogsConsole</li>
+					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> HTTP client (no CORS)</li>
+					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> Config editors in-app</li>
+				</ul>
+			</div>
+
+			<div class="heroVisual" data-hero-visual>
+				<div class="heroFrame">
+					<div class="heroFrameChrome" aria-hidden="true" />
+					<img
+						class="heroFrameImg"
+						src={screenshots[0].src}
+						alt="DevDock application preview"
+						width={1200}
+						height={675}
+						fetchpriority="high"
+					/>
+				</div>
+				<div class="heroFloatCard">
+					<LayoutGrid size={20} stroke-width={1.75} aria-hidden="true" />
+					<div>
+						<p class="heroFloatTitle">C:\DevDock</p>
+						<p class="heroFloatSub">One predictable runtime folder for every bundled service.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Bento (Apple-style large tiles + imagery) -->
+	<section class="section section--light bentoSection">
+		<div class="container container--wide">
+			<div class="sectionIntro sectionIntro--center" data-reveal>
+				<h2 class="sectionHeading">Your local stack, one surface</h2>
+				<p class="lede sectionLede sectionLede--center">
+					DevDock copies bundled binaries into <strong>C:\DevDock</strong>, starts and stops processes from the UI, and
+					streams structured logs—NGINX serves from <code>nginx\html</code>, PHP listens on <strong>127.0.0.1:9000</strong>,
+					and NGINX proxies <code>*.php</code> to that worker.
+				</p>
+			</div>
+
+			<div class="bentoApple" data-reveal-stagger>
+				<article class="bentoHero" data-reveal-item>
+					<div class="bentoHeroCopy">
+						<p class="bentoEyebrow">Services</p>
+						<h3 class="bentoHeroTitle">Orchestrate daemons from one dashboard</h3>
+						<p class="bentoHeroText">
+							Start and stop NGINX, PHP, MySQL, Mailpit, phpMyAdmin, embedded FTP, and sql-web. Open URLs, folders,
+							and config editors where supported—including Controls and Metrics for resource usage.
+						</p>
+					</div>
+					<div class="bentoHeroMedia">
+						<img src={screenshots[1].src} alt="DevDock services dashboard" loading="lazy" width={1600} height={900} />
+					</div>
+				</article>
+
+				<article class="bentoSide bentoSideA" data-reveal-item>
+					<div class="bentoIconXL">
+						<Zap size={36} stroke-width={1.5} />
+					</div>
+					<h3 class="bentoSideTitle">Logs &amp; HTTP tooling</h3>
+					<p class="bentoSideText">
+						LogsConsole aggregates lines per service; the HTTP Client uses Rust (reqwest) so you can call local APIs
+						without browser CORS.
+					</p>
+				</article>
+
+				<article class="bentoSide bentoSideB" data-reveal-item>
+					<div class="bentoIconXL">
+						<Shield size={36} stroke-width={1.5} />
+					</div>
+					<h3 class="bentoSideTitle">SQLite &amp; Rust workspace</h3>
+					<p class="bentoSideText">
+						SQLite One-Click creates a <code>.db</code> under your project path; the Rust Workspace tab helps you work
+						with Cargo projects from a chosen root.
+					</p>
+				</article>
+
+				<article class="bentoBand" data-reveal-item>
+					<div class="bentoBandStat">
+						<span class="bentoBandNum">7</span>
+						<span class="bentoBandLabel">core services (typical)</span>
+					</div>
+					<p class="bentoBandCopy">
+						NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, and sql-web—plus DNS &amp; HTTPS helpers when you need local
+						certificates and NGINX includes.
+					</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<!-- Integrations marquee -->
+	<section class="section section--dark marqueeSection" aria-label="Supported integrations">
+		<div class="container container--wide marqueeIntro">
+			<p class="marqueeEyebrow" data-reveal>Bundled stack</p>
+			<h2 class="sectionHeading sectionHeadingOnDark marqueeTitle" data-reveal>
+				Services DevDock can orchestrate
+			</h2>
+			<p class="lede ledeDark marqueeSub" data-reveal>
+				These match the services described in the project docs—swap the row for vendor logos if you publish branded
+				assets.
+			</p>
+		</div>
+		<div class="marqueeMask" data-reveal>
+			<div class="marqueeTrack">
+				<div class="marqueeChunk">
+					{
+						integrations.map(({ name, Icon }) => (
+							<div class="marqueeItem">
+								<span class="marqueeIcon" aria-hidden="true">
+									<Icon size={32} stroke-width={1.5} />
+								</span>
+								<span class="marqueeName">{name}</span>
+							</div>
+						))
+					}
+				</div>
+				<div class="marqueeChunk" aria-hidden="true">
+					{
+						integrations.map(({ name, Icon }) => (
+							<div class="marqueeItem">
+								<span class="marqueeIcon" aria-hidden="true">
+									<Icon size={32} stroke-width={1.5} />
+								</span>
+								<span class="marqueeName">{name}</span>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Gallery -->
+	<section class="section section--dark gallerySection">
+		<div class="container container--wide">
+			<div class="sectionIntro sectionIntro--center" data-reveal>
+				<h2 class="sectionHeading sectionHeadingOnDark">See the shell</h2>
+				<p class="lede ledeDark sectionLede sectionLede--center">
+					Replace these placeholders with real screenshots of the Dashboard, LogsConsole, and config editors from your
+					DevDock build.
+				</p>
+			</div>
+			<div class="shotsApple" data-reveal-stagger>
+				<figure class="shot shotHero" data-reveal-item>
+					<img src={screenshots[0].src} alt={screenshots[0].alt} loading="lazy" width={1600} height={900} />
+				</figure>
+				<figure class="shot shotSide" data-reveal-item>
+					<img src={screenshots[1].src} alt={screenshots[1].alt} loading="lazy" width={1200} height={675} />
+				</figure>
+				<figure class="shot shotSide" data-reveal-item>
+					<img src={screenshots[2].src} alt={screenshots[2].alt} loading="lazy" width={1200} height={675} />
+				</figure>
+			</div>
+		</div>
+	</section>
+
+	<!-- Features (Webflow-style: visual block + title + body + link) -->
+	<section class="section section--light featuresSection">
+		<div class="container container--wide featuresWrap">
+			<div class="sectionIntro sectionIntro--center featuresHeroIntro" data-reveal>
+				<h2 class="featuresDisplayTitle">Why you should use DevTools</h2>
+				<p class="lede featuresHeroLede sectionLede sectionLede--center">
+					Instead of stitching together installers by hand, <strong>DevDock</strong> gives you a single Windows desktop
+					app that syncs binaries into <strong>C:\DevDock</strong>, streams logs, and keeps configs next to the
+					processes that use them.
+				</p>
+			</div>
+			<div class="featuresGrid featuresGridSpotlight" data-reveal-stagger>
+				<article class="featureCardSpotlight" data-reveal-item>
+					<div class="featureCardVisual" aria-hidden="true">
+						<div class="featureCodeChrome">
+							<span class="featureCodeDots" />
+							<span class="featureCodeFile">orchestrator — tauri</span>
+						</div>
+						<pre class="featureSnippet featureSnippetFill"><code>{`# services synced to runtime
+C:\\DevDock\\
+  nginx\\  php\\  mysql\\  mailpit\\
+invoke("start_service", { name: "nginx" })`}</code></pre>
+					</div>
+					<div class="featureCardCopy">
+						<h3 class="featureCardTitle">Orchestration without the scavenger hunt</h3>
+						<p class="featureCardDesc">
+							Start and stop NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, and sql-web from one place. Bundled binaries
+							sync into a fixed tree so paths stay consistent across machines.
+						</p>
+						<a class="featureCardLink" href="/about">
+							Learn more <ArrowRight size={16} stroke-width={2} />
+						</a>
+					</div>
+				</article>
+				<article class="featureCardSpotlight" data-reveal-item>
+					<div class="featureCardVisual" aria-hidden="true">
+						<div class="featureCodeChrome">
+							<span class="featureCodeDots" />
+							<span class="featureCodeFile">LogsConsole — tail</span>
+						</div>
+						<pre class="featureSnippet featureSnippetFill"><code>{`C:\\DevDock\\logs\\
+  nginx.log
+  php.log
+  mysql.log
+# filter by service in UI`}</code></pre>
+					</div>
+					<div class="featureCardCopy">
+						<h3 class="featureCardTitle">Logs you can actually read</h3>
+						<p class="featureCardDesc">
+							Structured logs show in <strong>LogsConsole</strong> and on disk under <code>C:\DevDock\logs\</code>.
+							When something fails, filter by service first—then open the matching <code>.log</code> or NGINX’s
+							<code>error.log</code>.
+						</p>
+						<a class="featureCardLink" href="/about">
+							Learn more <ArrowRight size={16} stroke-width={2} />
+						</a>
+					</div>
+				</article>
+				<article class="featureCardSpotlight" data-reveal-item>
+					<div class="featureCardVisual" aria-hidden="true">
+						<div class="featureCodeChrome">
+							<span class="featureCodeDots" />
+							<span class="featureCodeFile">src/pages/Dashboard.tsx</span>
+						</div>
+						<pre class="featureSnippet featureSnippetFill"><code>{`tabs: [
+  "HTTP Client",    // reqwest, no CORS
+  "SQLite One-Click",
+  "Rust Workspace",
+  "DNS & HTTPS"
+]`}</code></pre>
+					</div>
+					<div class="featureCardCopy">
+						<h3 class="featureCardTitle">Extras in one window</h3>
+						<p class="featureCardDesc">
+							<strong>HTTP Client</strong> for local APIs without CORS. <strong>SQLite One-Click</strong>,
+							<strong>Rust Workspace</strong>, and <strong>DNS &amp; HTTPS</strong> tabs—workflows that usually sprawl
+							across separate tools.
+						</p>
+						<a class="featureCardLink" href="/about">
+							Learn more <ArrowRight size={16} stroke-width={2} />
+						</a>
+					</div>
+				</article>
+			</div>
+			<div class="midCta" data-reveal>
+				<a class="textCta" href="/about">
+					Read the full story <ArrowRight size={16} />
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ -->
+	<section class="section section--dark faqSection">
+		<div class="container container--wide">
+			<div class="faqHeader" data-reveal>
+				<div class="faqIconLabel">
+					<HelpCircle size={22} stroke-width={1.75} aria-hidden="true" />
+					<span>FAQ</span>
+				</div>
+				<h2 class="sectionHeading sectionHeadingOnDark">Questions, answered</h2>
+				<p class="lede ledeDark faqDeckSub">
+					Answers drawn from the DevDock project documentation—paths, ports, and behavior on Windows.
+				</p>
+			</div>
+			<div class="faqList" data-reveal-stagger>
+				{faq.map((item) => (
+					<details class="faqItem" data-reveal-item name="faq">
+						<summary class="faqSummary">
+							<span class="faqQ">{item.q}</span>
+							<span class="faqChevron" aria-hidden="true">
+								<ChevronDown size={24} stroke-width={2} />
+							</span>
+						</summary>
+						<div class="faqAnswerWrap">
+							<p class="faqAnswer">{item.a}</p>
+						</div>
+					</details>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Closing CTA -->
+	<section class="section section--light ctaBand">
+		<div class="container ctaRow" data-reveal>
+			<div>
+				<h2 class="sectionHeading ctaTitle">Ready to run {SITE_NAME}?</h2>
+				<p class="lede ctaLede">
+					Pull the latest release, install on Windows, then follow the tutorial to sync <code>C:\DevDock</code> and
+					bring services online.
+				</p>
+			</div>
+			<div class="ctaActions">
+				<a class="btnPrimary" href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">
+					<Download size={18} />
+					Download
+				</a>
+				<a class="textCta" href="/how-to-use">
+					How to use <ArrowRight size={16} />
+				</a>
+			</div>
+		</div>
+	</section>
 </Layout>
+
+<style>
+	.hero {
+		padding-top: 56px;
+		padding-bottom: 88px;
+		min-height: min(92vh, 900px);
+		display: flex;
+		align-items: center;
+	}
+
+	.heroGrid {
+		display: grid;
+		grid-template-columns: 1fr 1.05fr;
+		gap: 48px;
+		align-items: center;
+	}
+
+	.heroCopy {
+		max-width: 540px;
+	}
+
+	.eyebrow {
+		margin: 0 0 12px;
+		font-size: 13px;
+		line-height: 1.3;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.55);
+		font-weight: 500;
+	}
+
+	.heroHeadline {
+		color: #fff;
+	}
+
+	.heroSub {
+		margin: 16px 0 0;
+		font-size: 21px;
+		line-height: 1.35;
+		letter-spacing: -0.3px;
+		color: rgba(255, 255, 255, 0.82);
+		font-weight: 400;
+		max-width: 42ch;
+	}
+
+	.heroActions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 14px 22px;
+		margin-top: 28px;
+	}
+
+	.heroPrimary {
+		padding: 11px 20px;
+		font-size: 17px;
+	}
+
+	.heroLink {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--c-link-dark);
+		font-size: 17px;
+		font-weight: 400;
+		text-decoration: none;
+		background: none;
+		border: none;
+		padding: 8px 0;
+	}
+	.heroLink:hover {
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+
+	.heroMeta {
+		list-style: none;
+		margin: 32px 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 20px;
+		font-size: 13px;
+		letter-spacing: -0.12px;
+		color: rgba(255, 255, 255, 0.55);
+	}
+	.heroMeta li {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.heroVisual {
+		position: relative;
+	}
+
+	.heroFrame {
+		border-radius: 14px;
+		overflow: hidden;
+		background: #0d0d0d;
+		box-shadow:
+			0 0 0 1px rgba(255, 255, 255, 0.06),
+			0 40px 100px rgba(0, 0, 0, 0.55);
+	}
+	.heroFrameChrome {
+		height: 36px;
+		background: linear-gradient(180deg, #2a2a2c 0%, #1c1c1e 100%);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+	}
+	.heroFrameImg {
+		display: block;
+		width: 100%;
+		height: auto;
+		vertical-align: middle;
+	}
+
+	.heroFloatCard {
+		position: absolute;
+		bottom: -12px;
+		left: -12px;
+		max-width: 240px;
+		display: flex;
+		gap: 14px;
+		align-items: flex-start;
+		padding: 16px 18px;
+		border-radius: var(--radius-12);
+		background: rgba(39, 39, 41, 0.92);
+		backdrop-filter: blur(16px);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		color: #fff;
+		box-shadow: var(--shadow-card);
+	}
+	.heroFloatCard :global(svg) {
+		flex-shrink: 0;
+		opacity: 0.9;
+	}
+	.heroFloatTitle {
+		margin: 0;
+		font-size: 14px;
+		font-weight: 600;
+		letter-spacing: -0.14px;
+	}
+	.heroFloatSub {
+		margin: 4px 0 0;
+		font-size: 12px;
+		line-height: 1.35;
+		color: rgba(255, 255, 255, 0.55);
+	}
+
+	.sectionIntro {
+		margin-bottom: 36px;
+	}
+	.sectionIntro--center {
+		text-align: center;
+		max-width: 820px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.sectionLede {
+		max-width: 62ch;
+		margin-top: 14px;
+	}
+	.sectionLede--center {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.container--wide {
+		max-width: 1120px;
+	}
+
+	.sectionHeadingOnDark {
+		color: #fff;
+	}
+	.ledeDark {
+		color: rgba(255, 255, 255, 0.78);
+	}
+
+	.bentoSection {
+		padding-top: 96px;
+		padding-bottom: 96px;
+	}
+
+	/* Apple-style bento */
+	.bentoApple {
+		display: grid;
+		grid-template-columns: 1.25fr 1fr;
+		grid-template-rows: minmax(280px, auto) minmax(240px, auto) auto;
+		gap: 16px;
+		margin-top: 8px;
+	}
+
+	.bentoHero {
+		grid-column: 1;
+		grid-row: 1 / 3;
+		display: flex;
+		flex-direction: column;
+		background: #fff;
+		border-radius: 18px;
+		overflow: hidden;
+		box-shadow: var(--shadow-card);
+		min-height: 520px;
+	}
+
+	.bentoHeroCopy {
+		padding: 36px 40px 28px;
+	}
+	.bentoEyebrow {
+		margin: 0 0 10px;
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.45);
+	}
+	.bentoHeroTitle {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: clamp(28px, 3.2vw, 40px);
+		font-weight: 600;
+		line-height: 1.08;
+		letter-spacing: -0.4px;
+		color: var(--c-text-dark);
+	}
+	.bentoHeroText {
+		margin: 14px 0 0;
+		font-size: 18px;
+		line-height: 1.45;
+		letter-spacing: -0.25px;
+		color: var(--c-text-subtle);
+		max-width: 42ch;
+	}
+
+	.bentoHeroMedia {
+		flex: 1;
+		min-height: 320px;
+		background: #0a0a0a;
+		display: flex;
+		align-items: flex-end;
+	}
+	.bentoHeroMedia img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top center;
+		display: block;
+	}
+
+	.bentoSide {
+		background: #fff;
+		border-radius: 18px;
+		padding: 36px 32px;
+		box-shadow: var(--shadow-card);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 220px;
+	}
+	.bentoSideA {
+		grid-column: 2;
+		grid-row: 1;
+	}
+	.bentoSideB {
+		grid-column: 2;
+		grid-row: 2;
+	}
+	.bentoIconXL {
+		width: 64px;
+		height: 64px;
+		border-radius: 16px;
+		background: var(--c-bg-light);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--c-text-dark);
+		margin-bottom: 18px;
+	}
+	.bentoSideTitle {
+		margin: 0 0 10px;
+		font-family: var(--font-display);
+		font-size: 22px;
+		font-weight: 600;
+		letter-spacing: -0.2px;
+		line-height: 1.15;
+		color: var(--c-text-dark);
+	}
+	.bentoSideText {
+		margin: 0;
+		font-size: 16px;
+		line-height: 1.45;
+		color: var(--c-text-subtle);
+		max-width: 36ch;
+	}
+
+	.bentoBand {
+		grid-column: 1 / -1;
+		grid-row: 3;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 28px 48px;
+		padding: 36px 40px;
+		border-radius: 18px;
+		background: linear-gradient(180deg, #fafafc 0%, #f5f5f7 100%);
+		box-shadow: var(--shadow-card);
+	}
+	.bentoBandStat {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		min-width: 120px;
+	}
+	.bentoBandNum {
+		font-family: var(--font-display);
+		font-size: clamp(48px, 6vw, 72px);
+		font-weight: 600;
+		line-height: 1;
+		letter-spacing: -2px;
+		color: var(--c-text-dark);
+	}
+	.bentoBandLabel {
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.45);
+	}
+	.bentoBandCopy {
+		margin: 0;
+		flex: 1;
+		font-size: 19px;
+		line-height: 1.4;
+		letter-spacing: -0.3px;
+		color: var(--c-text-subtle);
+		max-width: 52ch;
+	}
+
+	/* Marquee */
+	.marqueeSection {
+		padding-top: 72px;
+		padding-bottom: 56px;
+	}
+	.marqueeIntro {
+		text-align: center;
+		margin-bottom: 8px;
+	}
+	.marqueeEyebrow {
+		margin: 0 0 12px;
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.45);
+	}
+	.marqueeTitle {
+		margin-bottom: 8px;
+	}
+	.marqueeSub {
+		margin: 0 auto;
+		max-width: 62ch;
+	}
+
+	.marqueeMask {
+		overflow: hidden;
+		width: 100%;
+		margin-top: 40px;
+		mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+		-webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+	}
+
+	.marqueeTrack {
+		display: flex;
+		width: max-content;
+		animation: marqueeScroll 50s linear infinite;
+	}
+
+	.marqueeChunk {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		padding: 12px 12px 48px;
+	}
+
+	.marqueeItem {
+		display: inline-flex;
+		align-items: center;
+		gap: 14px;
+		padding: 18px 28px;
+		border-radius: 14px;
+		background: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		color: #fff;
+		white-space: nowrap;
+	}
+	.marqueeIcon {
+		display: flex;
+		opacity: 0.95;
+	}
+	.marqueeName {
+		font-size: 17px;
+		font-weight: 500;
+		letter-spacing: -0.2px;
+	}
+
+	@keyframes marqueeScroll {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.marqueeTrack {
+			animation: none;
+			justify-content: center;
+			flex-wrap: wrap;
+			width: 100%;
+			max-width: 900px;
+			margin: 0 auto;
+		}
+		.marqueeChunk:last-child {
+			display: none;
+		}
+		.marqueeMask {
+			mask-image: none;
+			-webkit-mask-image: none;
+		}
+	}
+
+	/* Gallery — one large + two stacked */
+	.gallerySection {
+		padding-top: 88px;
+		padding-bottom: 88px;
+	}
+	.shotsApple {
+		display: grid;
+		grid-template-columns: 1.35fr 1fr;
+		grid-template-rows: 1fr 1fr;
+		gap: 16px;
+		min-height: 560px;
+		margin-top: 8px;
+	}
+	.shot {
+		margin: 0;
+		border-radius: 18px;
+		overflow: hidden;
+		background: #111;
+		box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+	}
+	.shotHero {
+		grid-column: 1;
+		grid-row: 1 / 3;
+		min-height: 100%;
+	}
+	.shotSide {
+		min-height: 0;
+	}
+	.shot img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top center;
+	}
+	.shotHero img {
+		min-height: 520px;
+	}
+
+	.featuresWrap.container--wide {
+		max-width: 1320px;
+	}
+
+	.featuresHeroIntro {
+		max-width: 960px;
+		margin-bottom: 52px;
+	}
+	.featuresDisplayTitle {
+		font-family: var(--font-display);
+		font-size: clamp(2rem, 4.8vw, 3.125rem);
+		font-weight: 600;
+		line-height: 1.05;
+		letter-spacing: -0.03em;
+		margin: 0;
+		color: var(--c-text-dark);
+	}
+	.featuresHeroLede {
+		margin-top: 20px;
+		font-size: clamp(17px, 1.85vw, 21px);
+		line-height: 1.45;
+		color: rgba(0, 0, 0, 0.52);
+		max-width: 58ch;
+	}
+	.featuresHeroLede :global(strong) {
+		color: rgba(0, 0, 0, 0.88);
+		font-weight: 600;
+	}
+
+	/* Spotlight cards: large visual (code) + copy block (Webflow-style) */
+	.featureCardSpotlight {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		min-height: 0;
+		border-radius: 16px;
+		overflow: hidden;
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.06);
+		box-shadow:
+			0 1px 2px rgba(0, 0, 0, 0.04),
+			0 16px 48px rgba(0, 0, 0, 0.07);
+	}
+	.featureCardVisual {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 62%;
+		min-height: 280px;
+		aspect-ratio: 4 / 5;
+		max-height: 420px;
+		background: #1c1c1e;
+	}
+	.featureCodeChrome {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		flex-shrink: 0;
+		padding: 10px 14px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		background: rgba(0, 0, 0, 0.25);
+	}
+	.featureCodeDots {
+		display: inline-block;
+		width: 38px;
+		height: 10px;
+		position: relative;
+		flex-shrink: 0;
+	}
+	.featureCodeDots::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: #ff5f57;
+		box-shadow: 14px 0 0 #febc2e, 28px 0 0 #28c840;
+	}
+	.featureCodeFile {
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+		font-size: 11px;
+		letter-spacing: 0.02em;
+		color: rgba(255, 255, 255, 0.42);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 55%;
+	}
+	.featureSnippet {
+		margin: 0;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+		font-size: 12px;
+		line-height: 1.5;
+		color: rgba(235, 235, 245, 0.75);
+		overflow-x: auto;
+		tab-size: 2;
+	}
+	.featureSnippetFill {
+		flex: 1;
+		min-height: 0;
+		padding: 14px 16px 20px;
+	}
+	.featureSnippet code {
+		font: inherit;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+	.featureCardCopy {
+		flex: 0 0 auto;
+		padding: 22px 22px 26px;
+		text-align: left;
+	}
+	.featureCardTitle {
+		font-family: var(--font-display);
+		font-size: 21px;
+		font-weight: 600;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
+		margin: 0;
+		color: var(--c-text-dark);
+	}
+	.featureCardDesc {
+		margin: 12px 0 0;
+		font-size: 15px;
+		line-height: 1.53;
+		letter-spacing: -0.2px;
+		color: rgba(0, 0, 0, 0.55);
+	}
+	.featureCardDesc :global(strong) {
+		font-weight: 600;
+		color: rgba(0, 0, 0, 0.78);
+	}
+	.featureCardDesc :global(code) {
+		font-size: 0.88em;
+		padding: 2px 5px;
+		border-radius: 5px;
+		background: rgba(0, 0, 0, 0.06);
+		color: rgba(0, 0, 0, 0.82);
+	}
+	.featureCardLink {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin-top: 18px;
+		font-size: 15px;
+		font-weight: 500;
+		color: var(--c-link-light);
+		text-decoration: none;
+	}
+	.featureCardLink:hover {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.featureCardLink :global(svg) {
+		flex-shrink: 0;
+	}
+
+	.midCta {
+		margin-top: 48px;
+		text-align: center;
+	}
+	.textCta {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 17px;
+		color: var(--c-link-light);
+		text-decoration: none;
+		font-weight: 400;
+	}
+	.textCta:hover {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.featuresSection {
+		padding-top: 112px;
+		padding-bottom: 128px;
+	}
+	.featuresGrid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 28px 36px;
+		align-items: stretch;
+	}
+	.featuresGridSpotlight {
+		gap: 40px 36px;
+	}
+	@media (max-width: 1024px) {
+		.featuresGrid {
+			grid-template-columns: 1fr;
+			gap: 28px;
+		}
+		.featureCardVisual {
+			max-height: none;
+			aspect-ratio: auto;
+			min-height: 260px;
+		}
+	}
+
+	/* FAQ */
+	.faqSection {
+		padding-top: 96px;
+		padding-bottom: 96px;
+	}
+	.faqHeader {
+		text-align: center;
+		max-width: 800px;
+		margin: 0 auto 40px;
+	}
+	.faqDeckSub {
+		margin-top: 14px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.faqIconLabel {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.45);
+		margin-bottom: 12px;
+	}
+	.faqList {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		max-width: 1000px;
+		margin: 0 auto;
+		width: 100%;
+	}
+	.faqItem {
+		border-radius: 16px;
+		background: rgba(20, 20, 22, 0.95);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		overflow: hidden;
+		transition: border-color 0.2s ease, background 0.2s ease;
+	}
+	.faqItem[open] {
+		border-color: rgba(255, 255, 255, 0.16);
+		background: rgba(28, 28, 30, 0.98);
+	}
+	.faqSummary {
+		cursor: pointer;
+		list-style: none;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+		min-height: 104px;
+		padding: 28px 32px;
+		font-size: 21px;
+		font-weight: 500;
+		letter-spacing: -0.35px;
+		line-height: 1.25;
+		color: #fff;
+	}
+	.faqSummary::-webkit-details-marker {
+		display: none;
+	}
+	.faqQ {
+		flex: 1;
+		text-align: left;
+		padding-right: 8px;
+	}
+	.faqChevron {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.08);
+		color: rgba(255, 255, 255, 0.9);
+		transition: transform 0.3s ease, background 0.2s ease;
+	}
+	.faqItem[open] .faqChevron {
+		transform: rotate(180deg);
+		background: rgba(0, 113, 227, 0.25);
+		color: #fff;
+	}
+	.faqSummary:hover .faqChevron {
+		background: rgba(255, 255, 255, 0.12);
+	}
+	.faqAnswerWrap {
+		padding: 0 32px 32px;
+		padding-top: 0;
+	}
+	.faqItem[open] .faqAnswerWrap {
+		padding-top: 0;
+	}
+	.faqAnswer {
+		margin: 0;
+		font-size: 17px;
+		line-height: 1.55;
+		letter-spacing: -0.25px;
+		color: rgba(255, 255, 255, 0.72);
+		max-width: 85ch;
+	}
+
+	.ctaBand {
+		border-top: 1px solid rgba(0, 0, 0, 0.06);
+	}
+	.ctaRow {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+	}
+	.ctaTitle {
+		margin-bottom: 0;
+	}
+	.ctaLede {
+		margin-top: 10px;
+	}
+	.ctaActions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 16px;
+	}
+
+	@media (max-width: 960px) {
+		.heroGrid {
+			grid-template-columns: 1fr;
+			gap: 40px;
+		}
+		.heroVisual {
+			order: -1;
+		}
+		.heroFloatCard {
+			position: relative;
+			bottom: auto;
+			left: auto;
+			margin-top: 16px;
+			max-width: none;
+		}
+		.bentoApple {
+			grid-template-columns: 1fr;
+			grid-template-rows: auto;
+		}
+		.bentoHero {
+			grid-column: 1;
+			grid-row: auto;
+			min-height: 0;
+		}
+		.bentoSideA,
+		.bentoSideB {
+			grid-column: 1;
+			grid-row: auto;
+			min-height: 200px;
+		}
+		.bentoBand {
+			grid-column: 1;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		.shotsApple {
+			grid-template-columns: 1fr;
+			grid-template-rows: auto;
+			min-height: 0;
+		}
+		.shotHero {
+			grid-column: 1;
+			grid-row: auto;
+		}
+		.shotHero img {
+			min-height: 280px;
+		}
+		.shotSide img {
+			min-height: 220px;
+		}
+		.faqSummary {
+			min-height: 0;
+			padding: 22px 20px;
+			font-size: 18px;
+		}
+		.faqAnswerWrap {
+			padding: 0 20px 24px;
+		}
+	}
+</style>

@@ -1,23 +1,269 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+type Props = {
+	title?: string;
+	description?: string;
+};
+
+const { title = 'DevDock', description = 'DevDock — local web stack for Windows (NGINX, PHP, MySQL, and more).' } =
+	Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/icon/32x32.png" />
+		<link rel="icon" type="image/png" sizes="64x64" href="/icon/64x64.png" />
+		<link rel="apple-touch-icon" href="/icon/128x128.png" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
+		<meta name="description" content={description} />
 	</head>
 	<body>
-		<slot />
+		<a class="skipLink" href="#main">Skip to content</a>
+		<Nav />
+		<main id="main">
+			<slot />
+		</main>
+		<Footer />
+		<script>
+			import '../scripts/site-animations.ts';
+		</script>
 	</body>
 </html>
 
-<style>
+<style is:global>
+	/* Fonts (provided: SF Pro Display). */
+	@font-face {
+		font-family: 'SF Pro Display';
+		src: url('/Fonts/sf-pro-display/SFPRODISPLAYREGULAR.OTF') format('opentype');
+		font-weight: 400;
+		font-style: normal;
+		font-display: swap;
+	}
+	@font-face {
+		font-family: 'SF Pro Display';
+		src: url('/Fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+		font-weight: 500;
+		font-style: normal;
+		font-display: swap;
+	}
+	@font-face {
+		font-family: 'SF Pro Display';
+		src: url('/Fonts/sf-pro-display/SFPRODISPLAYBOLD.OTF') format('opentype');
+		font-weight: 700;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	:root {
+		/* Apple-inspired tokens (see .cursor/DESIGN.md) */
+		--c-bg-light: #f5f5f7;
+		--c-bg-dark: #000000;
+		--c-text-light: #ffffff;
+		--c-text-dark: #1d1d1f;
+		--c-text-subtle: rgba(0, 0, 0, 0.8);
+		--c-text-tertiary: rgba(0, 0, 0, 0.48);
+		--c-accent: #0071e3;
+		--c-link-light: #0066cc;
+		--c-link-dark: #2997ff;
+
+		--radius-5: 5px;
+		--radius-8: 8px;
+		--radius-11: 11px;
+		--radius-12: 12px;
+		--radius-pill: 980px;
+
+		--shadow-card: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;
+
+		--container: 980px;
+
+		--font-display: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		--font-body: 'SF Pro Text', 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+
 	html,
 	body {
 		margin: 0;
+		padding: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
+	}
+
+	body {
+		font-family: var(--font-body);
+		background: var(--c-bg-light);
+		color: var(--c-text-dark);
+		text-rendering: geometricPrecision;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	body.navMobileOpen {
+		overflow: hidden;
+	}
+
+	:where(a) {
+		color: var(--c-link-light);
+		text-decoration: none;
+	}
+	:where(a:hover) {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--c-accent);
+		outline-offset: 2px;
+	}
+
+	.navShell :focus-visible,
+	.mobileBackdrop :focus-visible {
+		outline-color: #fff;
+	}
+
+	.skipLink {
+		position: absolute;
+		left: 12px;
+		top: 12px;
+		padding: 10px 12px;
+		border-radius: var(--radius-11);
+		background: #ffffff;
+		color: var(--c-text-dark);
+		box-shadow: var(--shadow-card);
+		transform: translateY(-160%);
+		transition: transform 0.2s ease;
+		z-index: 1000;
+	}
+	.skipLink:focus {
+		transform: translateY(0);
+	}
+
+	/* Layout primitives */
+	.container {
+		max-width: var(--container);
+		margin: 0 auto;
+		padding: 0 16px;
+	}
+
+	.section {
+		padding: 72px 0;
+	}
+	.section--dark {
+		background: var(--c-bg-dark);
+		color: var(--c-text-light);
+	}
+	.section--light {
+		background: var(--c-bg-light);
+		color: var(--c-text-dark);
+	}
+
+	.displayHero {
+		font-family: var(--font-display);
+		font-size: 56px;
+		font-weight: 600;
+		line-height: 1.07;
+		letter-spacing: -0.28px;
+		margin: 0;
+	}
+	.sectionHeading {
+		font-family: var(--font-display);
+		font-size: 40px;
+		font-weight: 600;
+		line-height: 1.1;
+		margin: 0 0 12px;
+	}
+	.lede {
+		font-size: 17px;
+		line-height: 1.47;
+		letter-spacing: -0.374px;
+		margin: 12px 0 0;
+		max-width: 65ch;
+	}
+
+	/* CTAs */
+	.btnRow {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 22px;
+	}
+	.btnPrimary {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		padding: 8px 15px;
+		border-radius: var(--radius-8);
+		background: var(--c-accent);
+		color: #ffffff;
+		border: 1px solid transparent;
+		font-size: 17px;
+		line-height: 1;
+	}
+	.btnPrimary:hover {
+		text-decoration: none;
+		filter: brightness(1.05);
+	}
+	.btnPillLink {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 14px;
+		border-radius: var(--radius-pill);
+		border: 1px solid currentColor;
+		font-size: 14px;
+		line-height: 1.43;
+		letter-spacing: -0.224px;
+	}
+	.btnPillLink:hover {
+		text-decoration: none;
+	}
+
+	/* Cards */
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 18px;
+		margin-top: 28px;
+	}
+	.card {
+		border-radius: var(--radius-12);
+		background: #ffffff;
+		padding: 18px;
+		box-shadow: var(--shadow-card);
+	}
+	.cardTitle {
+		font-family: var(--font-display);
+		font-size: 21px;
+		font-weight: 700;
+		line-height: 1.19;
+		letter-spacing: 0.231px;
+		margin: 10px 0 6px;
+	}
+	.cardBody {
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.29;
+		letter-spacing: -0.224px;
+		color: var(--c-text-subtle);
+	}
+
+	@media (max-width: 900px) {
+		.displayHero {
+			font-size: 40px;
+			line-height: 1.1;
+		}
+		.grid3 {
+			grid-template-columns: 1fr;
+		}
+		.section {
+			padding: 56px 0;
+		}
 	}
 </style>

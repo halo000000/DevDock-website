@@ -1,0 +1,107 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_NAME } from '../config/site';
+---
+
+<Layout
+	title={`Privacy — ${SITE_NAME}`}
+	description="Privacy policy placeholder for Dev Talk. Update before production."
+>
+	<section class="section section--light pageHero">
+		<div class="container narrow">
+			<p class="eyebrow">Legal</p>
+			<h1 class="displayHero">Privacy policy</h1>
+		<p class="lede">
+			This is a <strong>placeholder</strong> for the DevDock desktop app. Replace with counsel-approved text before
+			launch. DevDock runs locally on Windows and may read or write files under <code>C:\DevDock</code> as part of normal
+			operation.
+		</p>
+		</div>
+	</section>
+
+	<section class="section section--light pageBody">
+		<div class="container narrow">
+			<article class="prose" data-reveal>
+				<h2>Summary</h2>
+				<p>
+					{SITE_NAME} is distributed as a desktop application. This placeholder does not describe live data
+					practices—it exists so you have a route, layout, and structure ready for your future policy.
+				</p>
+
+				<h2>Information you may collect</h2>
+				<p>When you finalize this document, specify whether the app:</p>
+				<ul>
+					<li>Processes data only on-device</li>
+					<li>Uses analytics or crash reporting (and which vendors)</li>
+					<li>Syncs to servers you operate (what is stored, retention, region)</li>
+				</ul>
+
+				<h2>Third-party services</h2>
+				<p>
+					If you integrate authentication, cloud sync, or push infrastructure, list each provider, purpose, and link
+					to their policies.
+				</p>
+
+				<h2>Your rights</h2>
+				<p>
+					Depending on jurisdiction (GDPR, CCPA, etc.), describe access, deletion, and correction requests and how
+					users can contact you.
+				</p>
+
+				<h2>Contact</h2>
+				<p>Add a privacy contact email or form before publishing.</p>
+
+				<p class="fine">
+					Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+					— placeholder only.
+				</p>
+			</article>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.pageHero {
+		padding-bottom: 32px;
+	}
+	.eyebrow {
+		margin: 0 0 12px;
+		font-size: 13px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.45);
+		font-weight: 500;
+	}
+	.narrow {
+		max-width: 720px;
+	}
+	.pageBody {
+		padding-top: 0;
+	}
+	.prose h2 {
+		font-family: var(--font-display);
+		font-size: 28px;
+		font-weight: 600;
+		line-height: 1.15;
+		margin: 36px 0 12px;
+		color: var(--c-text-dark);
+	}
+	.prose h2:first-child {
+		margin-top: 0;
+	}
+	.prose p,
+	.prose ul {
+		font-size: 17px;
+		line-height: 1.55;
+		letter-spacing: -0.3px;
+		color: var(--c-text-subtle);
+	}
+	.prose ul {
+		padding-left: 1.2em;
+	}
+	.prose .fine {
+		margin-top: 48px;
+		font-size: 12px;
+		color: rgba(0, 0, 0, 0.45);
+	}
+</style>

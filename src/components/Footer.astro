@@ -1,0 +1,50 @@
+---
+import { GITHUB_RELEASES_URL, SITE_NAME } from '../config/site';
+---
+
+<footer class="footer">
+	<div class="footerInner">
+		<p class="finePrint">© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
+		<div class="footerLinks">
+			<a href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">Releases</a>
+			<a href="/about">About</a>
+			<a href="/how-to-use">How to use</a>
+			<a href="/privacy">Privacy</a>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		background: var(--c-bg-light);
+		border-top: 1px solid rgba(0, 0, 0, 0.06);
+	}
+	.footerInner {
+		max-width: var(--container);
+		margin: 0 auto;
+		padding: 22px 16px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px 18px;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.finePrint {
+		margin: 0;
+		font-size: 12px;
+		line-height: 1.33;
+		letter-spacing: -0.12px;
+		color: rgba(0, 0, 0, 0.48);
+	}
+	.footerLinks {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+	}
+	.footerLinks a {
+		font-size: 12px;
+		letter-spacing: -0.12px;
+		color: rgba(0, 0, 0, 0.8);
+	}
+</style>
+
