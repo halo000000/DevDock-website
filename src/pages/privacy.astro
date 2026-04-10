@@ -4,18 +4,17 @@ import { SITE_NAME } from '../config/site';
 ---
 
 <Layout
-	title={`Privacy — ${SITE_NAME}`}
-	description="Privacy policy placeholder for Dev Talk. Update before production."
+	title={`Privacy - ${SITE_NAME}`}
+	description="Privacy policy for DevDock, including what data is collected, how it is used, and how to contact the developer."
 >
 	<section class="section section--light pageHero">
 		<div class="container narrow">
 			<p class="eyebrow">Legal</p>
 			<h1 class="displayHero">Privacy policy</h1>
-		<p class="lede">
-			This is a <strong>placeholder</strong> for the DevDock desktop app. Replace with counsel-approved text before
-			launch. DevDock runs locally on Windows and may read or write files under <code>C:\DevDock</code> as part of normal
-			operation.
-		</p>
+			<p class="lede">
+				This policy explains how {SITE_NAME} ("DevDock", "we", "us") handles information when you use the app and this
+				website. If you have questions, contact us using the details at the end of this page.
+			</p>
 		</div>
 	</section>
 
@@ -24,36 +23,109 @@ import { SITE_NAME } from '../config/site';
 			<article class="prose" data-reveal>
 				<h2>Summary</h2>
 				<p>
-					{SITE_NAME} is distributed as a desktop application. This placeholder does not describe live data
-					practices—it exists so you have a route, layout, and structure ready for your future policy.
+					DevDock is designed to run locally on your computer. By default, it does not require an account and it does
+					not upload your project files to our servers.
 				</p>
-
-				<h2>Information you may collect</h2>
-				<p>When you finalize this document, specify whether the app:</p>
 				<ul>
-					<li>Processes data only on-device</li>
-					<li>Uses analytics or crash reporting (and which vendors)</li>
-					<li>Syncs to servers you operate (what is stored, retention, region)</li>
+					<li>DevDock runs locally and manages local services on your machine</li>
+					<li>Your project files stay on your device</li>
+					<li>We do not sell personal information</li>
 				</ul>
 
-				<h2>Third-party services</h2>
+				<h2>Information we collect</h2>
 				<p>
-					If you integrate authentication, cloud sync, or push infrastructure, list each provider, purpose, and link
-					to their policies.
+					The information we handle falls into three categories: information you provide, information created on your
+					device as part of normal operation, and optional diagnostics if you choose to send them.
+				</p>
+				<h3>Information you provide</h3>
+				<ul>
+					<li>Service settings you configure inside DevDock</li>
+					<li>Text you enter into tools inside DevDock (for example, HTTP request data)</li>
+					<li>Support messages you send to us and any attachments you choose to include</li>
+				</ul>
+				<h3>Local files created by DevDock</h3>
+				<p>
+					DevDock keeps service files, logs, and configuration files in a local folder on your computer so you can find
+					them easily. This is part of normal operation. These files stay on your device unless you choose to share
+					them.
+				</p>
+				<h3>Optional diagnostics</h3>
+				<p>
+					DevDock may display error details locally. If you contact support, you may choose to share logs or screenshots
+					to help us understand the issue. We only receive what you send us.
+				</ul>
+
+				<h2>How we use information</h2>
+				<p>We use information for the following purposes:</p>
+				<ul>
+					<li>Provide and improve DevDock features</li>
+					<li>Help you troubleshoot issues when you request support</li>
+					<li>Maintain the security and stability of the app</li>
+				</ul>
+
+				<h2>What we do not do</h2>
+				<ul>
+					<li>We do not sell your personal information</li>
+					<li>We do not read your files outside of what DevDock needs to run the services you enable</li>
+					<li>We do not upload your project files to our servers by default</li>
+				</ul>
+
+				<h2>Sharing and third parties</h2>
+				<p>
+					DevDock does not share your information with third parties for advertising. We may share information only in
+					these situations:
+				</p>
+				<ul>
+					<li><strong>With your consent</strong> when you choose to send us logs or other data for support</li>
+					<li><strong>For legal reasons</strong> if we are required to comply with a valid legal process</li>
+					<li><strong>To protect safety</strong> if needed to prevent fraud, abuse, or security issues</li>
+				</ul>
+
+				<h2>Data retention</h2>
+				<p>
+					Local service files and logs remain on your device until you delete them. If you contact support, we retain
+					your message and any attachments as long as needed to respond, maintain records, and improve the product. You
+					can request deletion of support communications by contacting us.
+				</p>
+
+				<h2>Security</h2>
+				<p>
+					We take reasonable steps to protect information you send us. No method of transmission or storage is 100
+					percent secure, so we cannot guarantee absolute security. You are responsible for protecting access to your
+					device and for reviewing what you choose to share with support.
+				</p>
+
+				<h2>Children's privacy</h2>
+				<p>
+					DevDock is not directed to children under 13 and we do not knowingly collect personal information from
+					children under 13. If you believe a child provided information to us, contact us and we will take steps to
+					delete it.
 				</p>
 
 				<h2>Your rights</h2>
 				<p>
-					Depending on jurisdiction (GDPR, CCPA, etc.), describe access, deletion, and correction requests and how
-					users can contact you.
+					Depending on where you live, you may have rights to access, correct, or delete personal information we have
+					about you. If you contact us, we will respond within a reasonable time.
+				</p>
+
+				<h2>Changes to this policy</h2>
+				<p>
+					We may update this policy from time to time. If we make material changes, we will update the date below and
+					publish the revised policy on this page.
 				</p>
 
 				<h2>Contact</h2>
-				<p>Add a privacy contact email or form before publishing.</p>
+				<p>
+					For privacy questions or requests, contact:
+				</p>
+				<ul>
+					<li><strong>Email:</strong> privacy@example.com</li>
+					<li><strong>Developer:</strong> Your Name</li>
+				</ul>
 
 				<p class="fine">
 					Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-					— placeholder only.
+					.
 				</p>
 			</article>
 		</div>

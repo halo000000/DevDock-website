@@ -1,53 +1,153 @@
 ---
 title: How to use DevDock
-description: "Install DevDock, sync services to C:\\DevDock, start NGINX and PHP, and use the main tabs—based on the project documentation."
+description: "Install DevDock, start the services you need, configure them, and troubleshoot common issues."
 videoEmbedUrl: https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ
 ---
 
-## Install and first launch
+## Install
 
-Download the latest release from GitHub and run the Windows installer produced by the Tauri build (NSIS/WiX, depending on your bundle settings).
+1. Download the latest installer from the DevDock download page.
+2. Run the installer.
+3. Launch DevDock from your desktop or Start menu.
 
-On first launch, DevDock ensures **`C:\DevDock`** exists and syncs bundled service binaries from the app into that runtime folder.
+## First launch
 
-## Main tabs
+DevDock keeps your local environment in a single folder so it stays easy to find:
 
-The shell is organized around a few primary areas (see the in-app **Dashboard**):
+- **Main folder:** `C:\DevDock`
 
-### Services dashboard
+Inside that folder you will find service files, logs, and configuration files.
 
-Start, stop, and restart **NGINX**, **PHP**, **MySQL**, **Mailpit**, **phpMyAdmin**, **FTP**, and **sql-web** from one place. Open URLs, folders, and the config editor where supported—including **Controls** and **Metrics** sub-views.
+## Start your local site
 
-### SQLite One-Click
+### 1. Put your files in the web root
 
-Create a `.db` file under a project path you choose, with quick access to phpMyAdmin for management.
+Copy your site files into:
 
-### HTTP Client
+- `C:\DevDock\nginx\html\`
 
-Send HTTP requests via the Rust backend (**reqwest**) so you can hit local APIs **without browser CORS** getting in the way.
+If you have a homepage, name it `index.html` or `index.php`.
 
-### LogsConsole
+### 2. Start the services you need
 
-Stream and filter log lines per service; logs also land on disk under `C:\DevDock\logs\`.
+A common start order:
 
-### Rust Workspace
+1. **MySQL** (only if your project needs a database)
+2. **PHP** (only if your site uses PHP)
+3. **NGINX**
+4. Optional: **Mailpit**, **phpMyAdmin**, **SQL Web**, **FTP**
 
-Point at a root folder to discover and work with Rust/Cargo projects.
+### 3. Open your site
 
-### DNS & HTTPS
+Click **Open** on the web service in DevDock, or open `http://localhost/` in your browser.
 
-Local DNS and HTTPS-related helpers (certificates, NGINX includes, Hickory DNS, etc.).
+## What each service is for
 
-## Put your site online locally
+### NGINX
 
-Place **`index.php`**, **`index.html`**, and assets under **`C:\DevDock\nginx\html\`**.
+- **What it does:** Serves your local site at `http://localhost/`.
+- **When to run it:** When you want to view your project in a browser.
+- **What to know:** Your site files live in `C:\DevDock\nginx\html\`.
 
-Start **NGINX** and the **PHP** worker from the services list. Open **`http://localhost/`** — static files are served by NGINX; **`*.php`** is proxied to the PHP built-in server on **`127.0.0.1:9000`**.
+### PHP
 
-## Configure services
+- **What it does:** Lets `.php` pages run.
+- **When to run it:** Only when your project needs PHP.
+- **What to know:** If PHP is not running, PHP pages will not work.
 
-Use each service’s **Config** action in the app to edit **`nginx.conf`**, **`php.ini`**, MySQL options, **`ftp.json`**, **`sql-web.json`**, and DNS/HTTPS JSON under **`C:\DevDock\config\`**. Saving may restart the service if it is already running.
+### MySQL
 
-## When something breaks
+- **What it does:** Provides a local database.
+- **When to run it:** Only when your project needs MySQL.
+- **What to know:** Start MySQL before using phpMyAdmin.
 
-Use **LogsConsole** first, then inspect **`C:\DevDock\logs\`** and NGINX’s **`error.log`** under the NGINX log directory. If a service will not start, check the in-app banner for **missing binaries** and confirm the **`services-binares`** tree synced to **`C:\DevDock`**.
+### phpMyAdmin
+
+- **What it does:** Web based database manager for MySQL.
+- **When to run it:** When you need to create databases, browse tables, import SQL, or run queries.
+- **What to know:** If it cannot connect, start MySQL first.
+
+### Mailpit
+
+- **What it does:** Captures emails locally so you can test mail without sending real messages.
+- **When to run it:** When your app sends emails and you want to test locally.
+- **What to know:** Configure your app to send SMTP mail to Mailpit while testing.
+
+### FTP
+
+- **What it does:** A local FTP server for testing uploads and integrations.
+- **When to run it:** Only if your project needs FTP.
+
+### SQL Web
+
+- **What it does:** A lightweight SQL interface you can open in your browser.
+- **When to run it:** When you want a quick database UI.
+
+## Configuration guide
+
+### Where configs live
+
+Most configuration files are inside `C:\DevDock`. You can open them from DevDock using each service's **Config** button.
+
+Typical locations include:
+
+- Web root: `C:\DevDock\nginx\html\`
+- Logs: `C:\DevDock\logs\`
+- Service specific configs inside each service folder
+
+### Safe workflow for changes
+
+1. Open the service **Config**.
+2. Make one change at a time.
+3. Save.
+4. Restart the service if DevDock prompts you, or if behavior does not change.
+5. If something breaks, undo the last change and restart again.
+
+## Usage examples
+
+### Example: static website
+
+1. Copy your site into `C:\DevDock\nginx\html\`.
+2. Start **NGINX**.
+3. Open `http://localhost/`.
+
+### Example: PHP website
+
+1. Copy your site into `C:\DevDock\nginx\html\`.
+2. Start **PHP**.
+3. Start **NGINX**.
+4. Open `http://localhost/`.
+
+### Example: app with database
+
+1. Start **MySQL**.
+2. Start your web service.
+3. Optional: start **phpMyAdmin** to manage the database.
+
+## Troubleshooting
+
+### My site does not load
+
+- Confirm the web service is running.
+- Confirm you have an `index.html` or `index.php` in the web root.
+- Open logs for the web service and look for the first error.
+
+### A service will not start
+
+- Look for a message in DevDock about what failed.
+- Check logs for that service.
+- Common causes include a port conflict or a config change that introduced an error.
+
+### phpMyAdmin cannot connect
+
+- Start **MySQL** first.
+- Restart phpMyAdmin after MySQL is running.
+
+## Getting help
+
+When asking for support, include:
+
+- Which service you started
+- What you expected to happen
+- What you saw instead
+- A screenshot of the error and the relevant log output

@@ -21,31 +21,31 @@ import {
 import { GITHUB_RELEASES_URL, SITE_NAME } from '../config/site';
 
 const screenshots = [
-	{ src: '/images/1.png', alt: 'DevDock application — dashboard and services' },
-	{ src: '/images/2.png', alt: 'DevDock application — workspace' },
-	{ src: '/images/3.png', alt: 'DevDock application — detail view' },
+	{ src: '/images/Frame 62.png', alt: 'DevDock application - dashboard and services' },
+	{ src: '/images/2.png', alt: 'DevDock application - workspace' },
+	{ src: '/images/3.png', alt: 'DevDock application - detail view' },
 ];
 
 /** Flat grid under “Why you should use DevTools”: image + title + subtext + link (no card chrome). */
 const featureColumns = [
 	{
-		img: screenshots[0],
+		img: { src: '/images/Frame 62.png', alt: 'DevDock feature preview - services dashboard' },
 		title: 'Orchestration without the scavenger hunt',
-		body: 'Start and stop NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, and sql-web from one place. Bundled binaries sync into a fixed tree so paths stay consistent across machines.',
+		body: 'Start and stop the services you need from one place. No more hunting for separate installers, toggles, and shortcuts every time you begin work.',
 		href: '/about',
 		linkLabel: 'Learn more',
 	},
 	{
-		img: screenshots[1],
+		img: { src: '/images/Frame 59.png', alt: 'DevDock feature preview - logs and diagnostics' },
 		title: 'Logs you can actually read',
-		body: 'Structured logs show in LogsConsole and on disk under your DevDock logs folder. When something fails, filter by service first, then open the matching log or NGINX error log for detail.',
+		body: 'When something fails, you should not guess. DevDock puts service logs in one place so you can quickly see what happened and what to fix.',
 		href: '/about',
 		linkLabel: 'Learn more',
 	},
 	{
-		img: screenshots[2],
+		img: { src: '/images/Frame 63.png', alt: 'DevDock feature preview - tools and extras' },
 		title: 'Extras in one window',
-		body: 'HTTP Client for local APIs, SQLite One-Click, Rust workspace helpers, and DNS and HTTPS tools—workflows that usually sprawl across separate apps.',
+		body: 'Useful tools sit next to your services so you stay focused. Do common tasks without switching between a dozen separate apps.',
 		href: '/about',
 		linkLabel: 'Learn more',
 	},
@@ -54,51 +54,43 @@ const featureColumns = [
 const faq = [
 	{
 		q: 'What is DevDock?',
-		a: 'DevDock is a Windows-focused local development suite: one desktop app (Tauri 2 + React) that orchestrates NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, sql-web, and related tools—so you are not hand-assembling XAMPP-style stacks.',
+		a: 'DevDock is a Windows desktop app that helps you run and manage a full local web environment from one place.',
 	},
 	{
 		q: 'Is DevDock only for Windows?',
-		a: 'Yes. Paths, runtime layout, and service integration are built around Windows (for example everything lives under C:\\DevDock). Use Node.js, Rust, and Windows to build and run the app from source.',
+		a: 'Yes. DevDock is designed for Windows and focuses on making local services feel simple and reliable.',
 	},
 	{
 		q: 'What is C:\\DevDock?',
-		a: 'That is the fixed runtime root: synced binaries, nginx\\html for your site, php\\, mysql\\, logs\\, config\\ JSON files, templates, and SQLite defaults. The app ensures this tree exists on startup and copies bundled services from the app resources.',
+		a: 'It is the main folder DevDock uses to keep local service files organized. If you ever need to find configs, logs, or your web root, you will find them there.',
 	},
 	{
 		q: 'Where do I put my website files?',
-		a: 'Put HTML, PHP, and assets under C:\\DevDock\\nginx\\html\\. With NGINX and the PHP worker running, open http://localhost/ — static files are served by NGINX and *.php is proxied to the PHP built-in server on 127.0.0.1:9000.',
+		a: 'Put your project files in the web root folder inside C:\\DevDock. Then start the web service in DevDock and open localhost in your browser.',
 	},
 	{
 		q: 'Which ports does DevDock use by default?',
-		a: 'Typical defaults: NGINX http://localhost (port 80), PHP worker 127.0.0.1:9000, MySQL 3306, Mailpit SMTP 1025 and UI 8025, phpMyAdmin http://127.0.0.1:8080, sql-web often 8090 (see sql-web.json). Exact values are in your configs.',
+		a: 'Defaults depend on your configuration. If something will not start, DevDock shows the reason, and the logs will point to common issues like a port conflict.',
 	},
 	{
 		q: 'How do I download DevDock?',
-		a: 'Use the Download button to open GitHub Releases and grab the latest Windows installer or artifact from your build pipeline (for example output from npm run tauri build under src-tauri/target/release/).',
+		a: 'Use the Download button to open the latest release and run the Windows installer.',
 	},
 	{
 		q: 'What is the HTTP Client tab for?',
-		a: 'It sends HTTP requests through Rust (reqwest) so you can exercise local APIs without browser CORS blocking you—useful for APIs you are developing against NGINX/PHP.',
+		a: 'It helps you test your local API endpoints quickly without needing extra tools.',
 	},
 	{
 		q: 'How do logs work?',
-		a: 'The LogsConsole tab aggregates lines per service with filtering. On disk, look under C:\\DevDock\\logs\\ (e.g. nginx.log, php.log, mysql.log) and NGINX’s own error log under the nginx logs directory.',
+		a: 'DevDock shows logs per service so you can filter and focus. You can also open log files on disk when you need to share or review them.',
 	},
 	{
 		q: 'Can I edit configs inside the app?',
-		a: 'Yes where supported: NGINX, php.ini, MySQL, FTP, sql-web, DNS & HTTPS JSON, etc. Saving may restart the related service if it is already running.',
+		a: 'Yes. For most services you can open the config from DevDock, make changes, save, and restart the service so changes apply.',
 	},
 	{
-		q: 'PHP will not execute—only download. Why?',
-		a: 'Confirm the PHP service is running, port 9000 is free, and check php.log plus NGINX error.log. NGINX must proxy *.php to the PHP worker; auto-start options in nginx.conf can tie the two together.',
-	},
-	{
-		q: 'What is DevDock built with?',
-		a: 'Tauri 2 (Rust) for the shell and service orchestration, React + Vite for the UI, and bundled upstream binaries for NGINX, PHP, MySQL/MariaDB, Mailpit, phpMyAdmin, and related tools—see your repo’s services-binares trees.',
-	},
-	{
-		q: 'What about licenses?',
-		a: 'Add a LICENSE file at the repo root if you open-source the project. Bundled third-party binaries remain under their upstream licenses; redistribute only in compliance with those terms.',
+		q: 'A service will not start. What should I do?',
+		a: 'Open the service logs and look for the first error. The most common causes are a port conflict, missing permissions, or a misconfigured option. Fix the issue, then restart the service.',
 	},
 ];
 
@@ -115,23 +107,23 @@ const integrations = [
 ---
 
 <Layout
-	title={`${SITE_NAME} — Local dev suite for Windows`}
-	description="DevDock bundles NGINX, PHP, MySQL, Mailpit, phpMyAdmin, and more behind one Tauri desktop app. Download from GitHub Releases."
+	title={`${SITE_NAME} - Local web services, simplified`}
+	description="DevDock helps you run a full local web environment on Windows from one simple desktop app. Start services, view logs, and manage configs without the manual setup."
 >
 	<!-- Hero -->
 	<section class="hero section section--dark">
-		<div class="container heroGrid">
+		<div class="container container--wide heroGrid heroGrid--hero">
 			<div class="heroCopy" data-hero-intro>
-				<p class="eyebrow" data-hero-line>Windows · Tauri 2 · Local stack</p>
+				<p class="eyebrow" data-hero-line>Local web services for Windows</p>
 				<h1 class="displayHero heroHeadline" data-hero-line>{SITE_NAME}</h1>
 				<p class="heroSub" data-hero-line>
-					A single desktop app that orchestrates NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, sql-web, and more—synced
-					into <strong>C:\DevDock</strong> so you stop juggling XAMPP-style installs by hand.
+					Run your local web environment from one clean dashboard. Start the services you need, keep configs organized,
+					and use logs to fix issues fast.
 				</p>
 				<div class="heroActions" data-hero-line>
 					<a class="btnPrimary heroPrimary" href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">
 						<Download size={18} stroke-width={2} />
-						Download (GitHub Releases)
+						Download
 					</a>
 					<a class="heroLink" href="/how-to-use">
 						How to use DevDock
@@ -139,31 +131,23 @@ const integrations = [
 					</a>
 				</div>
 				<ul class="heroMeta" data-hero-line>
-					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> Structured logs &amp; LogsConsole</li>
-					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> HTTP client (no CORS)</li>
-					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> Config editors in-app</li>
+					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> Start what you need in seconds</li>
+					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> Logs in one place</li>
+					<li><CheckCircle2 size={16} stroke-width={2} aria-hidden="true" /> Configs you can find and edit</li>
 				</ul>
 			</div>
 
 			<div class="heroVisual" data-hero-visual>
 				<div class="heroFrame">
-					<div class="heroFrameChrome" aria-hidden="true" />
 					<img
 						class="heroFrameImg"
-						src={screenshots[0].src}
-						alt="DevDock application preview"
+						src="/images/Hero-image.png"
+						alt="DevDock application preview showing services and tools"
 						width={1200}
 						height={675}
 						fetchpriority="high"
 					/>
-				</div>
-				<div class="heroFloatCard">
-					<LayoutGrid size={20} stroke-width={1.75} aria-hidden="true" />
-					<div>
-						<p class="heroFloatTitle">C:\DevDock</p>
-						<p class="heroFloatSub">One predictable runtime folder for every bundled service.</p>
-					</div>
-				</div>
+				
 			</div>
 		</div>
 	</section>
@@ -174,9 +158,8 @@ const integrations = [
 			<div class="sectionIntro sectionIntro--center" data-reveal>
 				<h2 class="sectionHeading">Your local stack, one surface</h2>
 				<p class="lede sectionLede sectionLede--center">
-					DevDock copies bundled binaries into <strong>C:\DevDock</strong>, starts and stops processes from the UI, and
-					streams structured logs—NGINX serves from <code>nginx\html</code>, PHP listens on <strong>127.0.0.1:9000</strong>,
-					and NGINX proxies <code>*.php</code> to that worker.
+					DevDock gives you one place to manage local services. Start and stop what you need, open the right tools fast,
+					and keep your work moving without repetitive setup.
 				</p>
 			</div>
 
@@ -184,14 +167,14 @@ const integrations = [
 				<article class="bentoHero" data-reveal-item>
 					<div class="bentoHeroCopy">
 						<p class="bentoEyebrow">Services</p>
-						<h3 class="bentoHeroTitle">Orchestrate daemons from one dashboard</h3>
+						<h3 class="bentoHeroTitle">Everything you need, in one dashboard</h3>
 						<p class="bentoHeroText">
-							Start and stop NGINX, PHP, MySQL, Mailpit, phpMyAdmin, embedded FTP, and sql-web. Open URLs, folders,
-							and config editors where supported—including Controls and Metrics for resource usage.
+							Start, stop, and restart services. Open the right URL or folder in one click. When something breaks, open
+							the logs and fix it without guessing.
 						</p>
 					</div>
 					<div class="bentoHeroMedia">
-						<img src={screenshots[1].src} alt="DevDock services dashboard" loading="lazy" width={1600} height={900} />
+						<img src="/images/MacBook-Pro-16.png" alt="DevDock services dashboard" loading="lazy" width={1600} height={900} />
 					</div>
 				</article>
 
@@ -201,8 +184,8 @@ const integrations = [
 					</div>
 					<h3 class="bentoSideTitle">Logs &amp; HTTP tooling</h3>
 					<p class="bentoSideText">
-						LogsConsole aggregates lines per service; the HTTP Client uses Rust (reqwest) so you can call local APIs
-						without browser CORS.
+						View logs per service and spot errors quickly. Use built in tools to test endpoints and verify behavior while
+						you develop.
 					</p>
 				</article>
 
@@ -210,10 +193,9 @@ const integrations = [
 					<div class="bentoIconXL">
 						<Shield size={36} stroke-width={1.5} />
 					</div>
-					<h3 class="bentoSideTitle">SQLite &amp; Rust workspace</h3>
+					<h3 class="bentoSideTitle">Project helpers</h3>
 					<p class="bentoSideText">
-						SQLite One-Click creates a <code>.db</code> under your project path; the Rust Workspace tab helps you work
-						with Cargo projects from a chosen root.
+						Create a quick local database when you need one. Keep project helpers nearby so common tasks stay simple.
 					</p>
 				</article>
 
@@ -223,8 +205,8 @@ const integrations = [
 						<span class="bentoBandLabel">core services (typical)</span>
 					</div>
 					<p class="bentoBandCopy">
-						NGINX, PHP, MySQL, Mailpit, phpMyAdmin, FTP, and sql-web—plus DNS &amp; HTTPS helpers when you need local
-						certificates and NGINX includes.
+						A complete set of services for local development, plus optional helpers for local domains and HTTPS when you
+						need them.
 					</p>
 				</article>
 			</div>
@@ -234,13 +216,12 @@ const integrations = [
 	<!-- Integrations marquee -->
 	<section class="section section--dark marqueeSection" aria-label="Supported integrations">
 		<div class="container container--wide marqueeIntro">
-			<p class="marqueeEyebrow" data-reveal>Bundled stack</p>
+			<p class="marqueeEyebrow" data-reveal>Services</p>
 			<h2 class="sectionHeading sectionHeadingOnDark marqueeTitle" data-reveal>
-				Services DevDock can orchestrate
+				What you can run
 			</h2>
 			<p class="lede ledeDark marqueeSub" data-reveal>
-				These match the services described in the project docs—swap the row for vendor logos if you publish branded
-				assets.
+				Start the services you need for your project and keep them all in one place.
 			</p>
 		</div>
 		<div class="marqueeMask" data-reveal>
@@ -279,38 +260,36 @@ const integrations = [
 			<div class="sectionIntro sectionIntro--center" data-reveal>
 				<h2 class="sectionHeading sectionHeadingOnDark">See the shell</h2>
 				<p class="lede ledeDark sectionLede sectionLede--center">
-					Replace these placeholders with real screenshots of the Dashboard, LogsConsole, and config editors from your
-					DevDock build.
+					A quick look at the dashboard, tools, and service views.
 				</p>
 			</div>
 			<div class="shotsApple" data-reveal-stagger>
 				<figure class="shot shotHero" data-reveal-item>
-					<img src={screenshots[0].src} alt={screenshots[0].alt} loading="lazy" width={1600} height={900} />
+					<img src="/images/Frame 62.png" alt={screenshots[0].alt} loading="lazy" width={1600} height={900} />
 				</figure>
 				<figure class="shot shotSide" data-reveal-item>
-					<img src={screenshots[1].src} alt={screenshots[1].alt} loading="lazy" width={1200} height={675} />
+					<img src="/images/Frame 59.png" alt={screenshots[1].alt} loading="lazy" width={1200} height={675} />
 				</figure>
 				<figure class="shot shotSide" data-reveal-item>
-					<img src={screenshots[2].src} alt={screenshots[2].alt} loading="lazy" width={1200} height={675} />
+					<img src="/images/Frame 63.png" alt={screenshots[2].alt} loading="lazy" width={1200} height={675} />
 				</figure>
 			</div>
 		</div>
 	</section>
 
-	<!-- Features: flat grid — rounded image, title, subtext, link (no card chrome) -->
+	<!-- Features: flat grid with image, title, text, link -->
 	<section class="section section--light featuresSection">
 		<div class="container container--wide featuresWrap">
 			<div class="sectionIntro sectionIntro--center featuresHeroIntro" data-reveal>
 				<h2 class="featuresDisplayTitle">Why you should use DevTools</h2>
 				<p class="lede featuresHeroLede sectionLede sectionLede--center">
-					Instead of stitching together installers by hand, <strong>DevDock</strong> gives you a single Windows desktop
-					app that syncs binaries into <strong>C:\DevDock</strong>, streams logs, and keeps configs next to the
-					processes that use them.
+					Skip repetitive setup. DevDock helps you get your local environment running fast, then stay productive with the
+					right tools close by.
 				</p>
 			</div>
 			<div class="featuresGrid featuresGridFlat" data-reveal-stagger>
 				{featureColumns.map((col) => (
-					<article class="featureCell border-2 border-gray-200 rounded-lg" data-reveal-item>
+					<article class="featureCell" data-reveal-item>
 						<div class="featureMedia">
 							<img
 								src={col.img.src}
@@ -323,15 +302,17 @@ const integrations = [
 						</div>
 						<h3 class="featureCellTitle">{col.title}</h3>
 						<p class="featureCellDesc">{col.body}</p>
-				
+						{/* <a class="featureCellLink" href={col.href}>
+							{col.linkLabel} <ArrowRight size={16} stroke-width={2} />
+						</a> */}
 					</article>
 				))}
 			</div>
-			<!-- <div class="midCta" data-reveal>
+			<div class="midCta" data-reveal>
 				<a class="textCta" href="/about">
 					Read the full story <ArrowRight size={16} />
 				</a>
-			</div> -->
+			</div>
 		</div>
 	</section>
 
@@ -345,7 +326,7 @@ const integrations = [
 				</div>
 				<h2 class="sectionHeading sectionHeadingOnDark">Questions, answered</h2>
 				<p class="lede ledeDark faqDeckSub">
-					Answers drawn from the DevDock project documentation—paths, ports, and behavior on Windows.
+					Simple answers to common questions.
 				</p>
 			</div>
 			<div class="faqList" data-reveal-stagger>
@@ -372,8 +353,7 @@ const integrations = [
 			<div>
 				<h2 class="sectionHeading ctaTitle">Ready to run {SITE_NAME}?</h2>
 				<p class="lede ctaLede">
-					Pull the latest release, install on Windows, then follow the tutorial to sync <code>C:\DevDock</code> and
-					bring services online.
+					Download the latest release, install on Windows, and follow the guide to start your local environment.
 				</p>
 			</div>
 			<div class="ctaActions">
@@ -404,9 +384,15 @@ const integrations = [
 		gap: 48px;
 		align-items: center;
 	}
+	@media (min-width: 1100px) {
+		.heroGrid--hero {
+			grid-template-columns: minmax(420px, 0.9fr) minmax(0, 1.6fr);
+			gap: 56px;
+		}
+	}
 
 	.heroCopy {
-		max-width: 540px;
+		max-width: 520px;
 	}
 
 	.eyebrow {
@@ -482,12 +468,16 @@ const integrations = [
 
 	.heroVisual {
 		position: relative;
+		justify-self: end;
+		width: 100%;
 	}
 
 	.heroFrame {
 		border-radius: 14px;
 		overflow: hidden;
 		background: #0d0d0d;
+		width: min(980px, 100%);
+		margin-left: auto;
 		box-shadow:
 			0 0 0 1px rgba(255, 255, 255, 0.06),
 			0 40px 100px rgba(0, 0, 0, 0.55);
@@ -499,7 +489,7 @@ const integrations = [
 	}
 	.heroFrameImg {
 		display: block;
-		width: 100%;
+		width: 130%;
 		height: auto;
 		vertical-align: middle;
 	}
@@ -816,7 +806,7 @@ const integrations = [
 		}
 	}
 
-	/* Gallery — one large + two stacked */
+	/* Gallery: one large + two stacked */
 	.gallerySection {
 		padding-top: 88px;
 		padding-bottom: 88px;
@@ -884,7 +874,7 @@ const integrations = [
 		font-weight: 600;
 	}
 
-	/* Flat feature grid: image (rounded) + text — no borders or card shadow */
+	/* Flat feature grid: image (rounded) + text with no card shadow */
 	.featuresGridFlat {
 		gap: 48px 44px;
 	}

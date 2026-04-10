@@ -5,22 +5,22 @@ import { GITHUB_RELEASES_URL, SITE_NAME } from '../config/site';
 ---
 
 <Layout
-	title={`About — ${SITE_NAME}`}
-	description="What DevDock does: Windows local stack under C:\DevDock, Tauri 2 + React, NGINX, PHP, MySQL, Mailpit, and more."
+	title={`About - ${SITE_NAME}`}
+	description="DevDock is a Windows app that helps you run and manage a local web environment from one place. Start services, view logs, and edit configs without the manual setup."
 >
 	<section class="aboutHero section section--dark">
 		<div class="container aboutHeroGrid">
 			<div data-hero-intro>
 				<p class="eyebrow" data-hero-line>About</p>
-				<h1 class="displayHero" data-hero-line>Local development, orchestrated</h1>
+				<h1 class="displayHero" data-hero-line>Local development, simplified</h1>
 				<p class="aboutLead" data-hero-line>
-					<strong>{SITE_NAME}</strong> is a Windows-focused local development suite: NGINX, PHP, MySQL, Mailpit,
-					phpMyAdmin, embedded FTP, sql-web, and helpers for HTTP, SQLite, Rust workspaces, and DNS/HTTPS—bundled behind
-					one <strong>Tauri 2</strong> desktop app with a <strong>React + Vite</strong> UI.
+					<strong>{SITE_NAME}</strong> helps you run the services your web projects rely on, all from one clean Windows
+					app. Start what you need, stop what you do not, and use logs and configuration tools to keep everything
+					running smoothly.
 				</p>
 				<div class="btnRow" data-hero-line>
 					<a class="btnPrimary" href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">
-						GitHub Releases
+						Download
 					</a>
 					<a class="aboutHeroLink" href="/how-to-use">
 						How-to guide <ArrowRight size={16} />
@@ -32,7 +32,7 @@ import { GITHUB_RELEASES_URL, SITE_NAME } from '../config/site';
 					<Layers size={22} stroke-width={1.75} aria-hidden="true" />
 					<div>
 						<p class="aboutHeroCardTitle">C:\DevDock</p>
-						<p class="aboutHeroCardSub">nginx\html · logs\ · config\ — one tree.</p>
+						<p class="aboutHeroCardSub">Service files, logs, and configs in one place.</p>
 					</div>
 				</div>
 				<img
@@ -52,27 +52,22 @@ import { GITHUB_RELEASES_URL, SITE_NAME } from '../config/site';
 			<div class="aboutWhatBlock" data-reveal>
 				<h2 class="sectionHeading">What {SITE_NAME} does</h2>
 				<p class="lede blockLede">
-					On launch, the app ensures <strong>C:\DevDock</strong> exists and syncs bundled service binaries from app
-					resources (or dev <code>services-binares</code>) into that runtime. The React frontend talks to Rust via
-					Tauri <code>invoke</code> commands to start and stop services, read logs, and load or save config documents.
+					DevDock gives you one place to manage a complete local environment. Instead of installing and managing separate
+					tools by hand, you open one app and control the services you need.
 				</p>
 				<p class="bodyPara">
-					<strong>NGINX</strong> serves static files from <code>C:\DevDock\nginx\html</code>. <strong>PHP</strong> for the
-					main site uses a built-in server on <code>127.0.0.1:9000</code>; NGINX proxies <code>*.php</code> to it so
-					scripts execute instead of downloading. <strong>phpMyAdmin</strong> runs as its own PHP server on port
-					<strong>8080</strong> (separate from the NGINX PHP worker).
+					It is designed for everyday work. Start your web server and database, open tools like an email inbox or a
+					database UI, then stop everything when you are done.
 				</p>
 				<p class="bodyPara">
-					You also get structured logging (UI + disk), an HTTP client without CORS, optional Rust workspace discovery,
-					and DNS/HTTPS experiments—documented in the project’s <code>Appliction.md</code> and repository layout
-					(<code>src/</code> React, <code>src-tauri/</code> Rust).
+					DevDock also keeps logs and configuration options easy to access, so troubleshooting is straightforward.
 				</p>
 				<figure class="aboutSnippetFigure">
-					<pre class="aboutSnippet" tabindex="0"><code># Request flow (from the DevDock docs)
-# Put your site in C:\DevDock\nginx\html
-# Run NGINX + PHP, then open:
-http://localhost/</code></pre>
-					<figcaption class="aboutSnippetCaption">Request flow from the DevDock docs</figcaption>
+					<pre class="aboutSnippet" tabindex="0"><code>Where are my files?
+
+DevDock keeps service files, logs, and configs in one place:
+C:\DevDock</code></pre>
+					<figcaption class="aboutSnippetCaption">One folder for your local environment</figcaption>
 				</figure>
 			</div>
 		</div>
@@ -80,7 +75,7 @@ http://localhost/</code></pre>
 
 	<section class="section section--dark">
 		<div class="container">
-			<h2 class="sectionHeading sectionHeadingOnDark" data-reveal>How the shell is organized</h2>
+			<h2 class="sectionHeading sectionHeadingOnDark" data-reveal>Designed for real workflows</h2>
 			<div class="pillGrid" data-reveal-stagger>
 				<div class="pillCard" data-reveal-item>
 					<div class="pillIcon">
@@ -88,18 +83,17 @@ http://localhost/</code></pre>
 					</div>
 					<h3 class="pillTitle">Service dashboard</h3>
 					<p class="pillBody">
-						List of services: start/stop/restart, open URLs or folders, edit configs. Nested tabs for Controls (cards)
-						and Metrics (resource usage)—see <code>Dashboard.tsx</code> in the app source.
+						Start, stop, and restart services. Open the right URL or folder quickly. Keep everything in a single place so
+						your setup stays consistent.
 					</p>
 				</div>
 				<div class="pillCard" data-reveal-item>
 					<div class="pillIcon">
 						<Monitor size={20} />
 					</div>
-					<h3 class="pillTitle">Desktop-native UX</h3>
+					<h3 class="pillTitle">Fast and focused</h3>
 					<p class="pillBody">
-						Production builds disable the browser-style right-click menu on the webview so the app feels native on
-						Windows.
+						A lightweight experience that keeps the tools you need close and reduces the friction of local development.
 					</p>
 				</div>
 				<div class="pillCard" data-reveal-item>
@@ -108,19 +102,17 @@ http://localhost/</code></pre>
 					</div>
 					<h3 class="pillTitle">Predictable paths</h3>
 					<p class="pillBody">
-						Everything runtime-related lives under <strong>C:\DevDock</strong>: nginx, php, mysql, logs, config JSON,
-						templates, and SQLite defaults—mirroring <code>src-tauri/src/paths.rs</code>.
+						Keep service files, logs, and configs organized in one root folder so you can always find what you need.
 					</p>
 				</div>
 				<div class="pillCard" data-reveal-item>
 					<div class="pillIcon">
 						<Lock size={20} />
 					</div>
-					<h3 class="pillTitle">Configs &amp; restarts</h3>
+					<h3 class="pillTitle">Configs and restarts</h3>
 					<p class="pillBody">
-						Saving a config may restart the related service if it is already running (see Rust
-						<code>maybe_restart_if_running</code> in the crate). Third-party binaries remain under their upstream
-						licenses.
+						Edit configs and apply changes safely. If a service needs a restart to apply changes, DevDock helps you do
+						that without guesswork.
 					</p>
 				</div>
 			</div>
@@ -130,27 +122,23 @@ http://localhost/</code></pre>
 	<section class="section section--light">
 		<div class="container">
 			<div class="longRead" data-reveal>
-				<h2 class="sectionHeading">PHP, NGINX, and your files</h2>
+				<h2 class="sectionHeading">Purpose and philosophy</h2>
 				<p class="bodyPara">
-					Place <code>index.php</code>, <code>index.html</code>, and assets under <code>C:\DevDock\nginx\html\</code>.
-					With NGINX and the PHP worker running, open <code>http://localhost/</code> or
-					<code>http://localhost/yourfile.php</code>. Static files are served by NGINX; PHP requests go through NGINX’s
-					proxy to <code>127.0.0.1:9000</code>.
+					DevDock is built around a simple idea: local development should be easy to start and easy to maintain. The app
+					stays out of your way and focuses on the actions you repeat every day.
 				</p>
 				<p class="bodyPara">
-					Edit <code>C:\DevDock\php\php.ini</code> from the app (PHP → Config, or phpMyAdmin → Config—they target the same
-					file). For troubleshooting, follow the doc order: LogsConsole, then on-disk logs, then NGINX
-					<code>error.log</code>, then check for missing binaries and port conflicts.
+					If you prefer a predictable workspace, DevDock keeps service files, logs, and configuration in one root folder.
+					That makes it easier to back up, troubleshoot, and reset specific services when needed.
 				</p>
 				<p class="bodyPara">
-					To build from source: <code>npm install</code>, <code>npm run tauri dev</code> (see
-					<code>tauri.conf.json</code> for the Vite dev URL). Production builds run prune/stage scripts and
-					<code>npm run build</code> before Rust compiles; installers land under <code>src-tauri/target/release/</code>.
+					The goal is confidence. You should be able to start services, confirm they are working, and solve problems
+					quickly when something goes wrong.
 				</p>
 			</div>
 
 			<div class="inlineFigure" data-reveal>
-				<img src="/images/3.png" alt="DevDock configuration or detail view" width={1200} height={675} loading="lazy" />
+				<img src="/images/inside-computer.png" alt="DevDock configuration or detail view" width={1200} height={675} loading="lazy" />
 			</div>
 		</div>
 	</section>
@@ -164,25 +152,41 @@ http://localhost/</code></pre>
 					</div>
 					<h3 class="reqTitle">System requirements</h3>
 					<ul class="reqList">
-						<li>Windows (paths and services are Windows-oriented)</li>
-						<li>Node.js for the JS toolchain</li>
-						<li>Rust toolchain for Tauri / <code>src-tauri</code></li>
+						<li>Windows 10 or later</li>
+						<li>Enough disk space for your projects and local services</li>
+						<li>Administrator permissions may be required depending on service settings</li>
 					</ul>
-					<p class="reqNote">DevDock is not positioned as a macOS/Linux app in the current documentation.</p>
+					<p class="reqNote">DevDock is currently focused on Windows.</p>
 				</div>
 				<div class="reqCard" data-reveal-item>
 					<div class="reqIcon">
 						<Sparkles size={20} />
 					</div>
-					<h3 class="reqTitle">Download source</h3>
+					<h3 class="reqTitle">Download</h3>
 					<p class="reqBody">
-						Installers and release notes live on GitHub. The site’s Download buttons point at the latest release so
-						users always pick up the newest build.
+						Get the latest installer and start using DevDock in minutes.
 					</p>
 					<a class="textLink" href={GITHUB_RELEASES_URL} target="_blank" rel="noreferrer">
-						Open Releases <ArrowRight size={16} />
+						Open download page <ArrowRight size={16} />
 					</a>
 				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--light">
+		<div class="container" data-reveal>
+			<div class="longRead">
+				<h2 class="sectionHeading">Developer</h2>
+				<p class="bodyPara">
+					DevDock is built and maintained by an independent developer. If you need support, want to report a bug, or want
+					to collaborate, use the contacts below.
+				</p>
+				<ul class="reqList">
+					<li><strong>Name:</strong> Halwest Jamal</li>
+					<li><strong>GitHub:</strong> <a href="https://github.com/halo000000">GitHub</a></li>
+					<li><strong>Telegram:</strong> <a href="https://t.me/HAlwest0_0">Telegram</a></li>
+				</ul>
 			</div>
 		</div>
 	</section>
@@ -191,8 +195,8 @@ http://localhost/</code></pre>
 		<div class="container narrowDark" data-reveal>
 			<h2 class="sectionHeading sectionHeadingOnDark">Privacy</h2>
 			<p class="lede ledeDark">
-				We believe privacy documentation should be concrete—not a wall of legalese. A full policy is in progress; for
-				now you can read the placeholder page that reserves space for future counsel-approved text.
+				We believe privacy documentation should be concrete and easy to understand. A full policy is in progress. For now
+				you can read the draft page that reserves space for future counsel approved text.
 			</p>
 			<a class="aboutPrivacyCta" href="/privacy">
 				Read the privacy policy (draft) <ArrowRight size={16} />

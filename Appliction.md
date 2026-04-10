@@ -1,232 +1,224 @@
-# DevDock
+# DevDock — User Guide
 
-**DevDock** is a Windows-focused **local development suite** that bundles common backend services (web server, PHP, database, mail testing, and more) behind a single **desktop application** built with **[Tauri 2](https://v2.tauri.app/)** (Rust) and **[React](https://react.dev/)** + **[Vite](https://vitejs.dev/)**.
+DevDock is a local development suite for Windows that helps you run common developer services (web server, PHP, database, mail testing, etc.) from one desktop app.
 
-Instead of juggling XAMPP-style installs by hand, DevDock **syncs bundled service binaries** into a fixed runtime folder, **starts and stops processes** from the UI, exposes **structured logs**, and provides extra tools (HTTP client, Rust workspace helpers, local DNS/HTTPS experiments).
-
----
-
-## Table of contents
-
-- [What DevDock does](#what-devdock-does)
-- [How it works (high level)](#how-it-works-high-level)
-- [Main UI tabs](#main-ui-tabs)
-- [Services overview](#services-overview)
-- [Runtime layout (`C:\DevDock`)](#runtime-layout-cdevdock)
-- [PHP: where to put files and how requests flow](#php-where-to-put-files-and-how-requests-flow)
-- [Configuring each service](#configuring-each-service)
-- [Official documentation (external)](#official-documentation-external)
-- [Repository structure](#repository-structure)
-- [Development](#development)
-- [Production build](#production-build)
-- [Debugging when something goes wrong](#debugging-when-something-goes-wrong)
-- [Contact](#contact)
-- [License](#license)
+This guide explains **how to use the installed app** (not how to compile it).
 
 ---
 
-## What DevDock does
+## Quick start
 
-- **Orchestrates** local daemons/exes (NGINX, PHP worker, MySQL, Mailpit, phpMyAdmin, embedded FTP, sql-web) from the UI.
-- **Copies** the shipped `services-binares` tree into a predictable Windows path on startup (see [Runtime layout](#runtime-layout-cdevdock)).
-- **Surfaces logs** per service in the **LogsConsole** tab and on-disk under `C:\DevDock\logs\`.
-- **Edits config files** through a built-in editor (UI + raw code) where supported.
-- Provides **HTTP Client** (Rust/`reqwest`) to call local APIs **without browser CORS**.
-- Optional **Rust workspace** scanning and **local DNS / HTTPS** tooling (see tabs below).
+- **Open DevDock**
+- Go to **List of all the service → Controls**
+- Click **Start** on the services you need (recommended order below)
+- Click **Open** to open the service in your browser (or open its folder/log where applicable)
 
----
+### Recommended start order (most common)
 
-## How it works (high level)
-
-1. On launch, the app ensures **`C:\DevDock`** exists and syncs bundled binaries from the app resources (or dev `services-binares` / pruned copy, depending on build).
-2. The **frontend** (React) talks to the **Rust backend** via Tauri **commands** (`invoke`) to start/stop services, read logs, load/save config documents, etc.
-3. **NGINX** serves static files from `C:\DevDock\nginx\html`. **PHP** for the main site is handled by a **PHP built-in server** bound to `127.0.0.1:9000`, and NGINX **proxies** `*.php` requests to that server (so `.php` files execute instead of downloading).
-4. **phpMyAdmin** runs as a separate PHP built-in server on **port 8080** (not the same process as the NGINX PHP worker).
+- **MySQL** (if you need a database)
+- **PHP** (needed for PHP pages through NGINX)
+- **NGINX** (web server on `http://localhost/`)
+- **Mailpit** (if you want a local mail inbox)
+- **phpMyAdmin** (if you want a database UI)
 
 ---
 
-## Main UI tabs
+## Where your files, configs, and logs are stored
 
-These are the primary tabs in the application shell (see `src/pages/Dashboard.tsx`).
+DevDock uses a single runtime folder on your machine:
 
-| Tab | Purpose |
-| --- | --- |
-| **List of all the service** | Main service dashboard: start/stop/restart each service, open URLs or folders, and open the config editor where available. Includes nested sub-tabs **Controls** (cards) and **Metrics** (resource usage). |
-| **SQLite One-Click** | Create a `.db` file under a chosen project path; quick link to phpMyAdmin for management. |
-| **HTTP Client** | Send HTTP requests from Rust (no CORS); useful for testing local APIs. |
-| **LogsConsole** | Aggregated log lines from services with a per-service filter. |
-| **Rust Workspace** | Discover and work with Rust/Cargo projects from a chosen root. |
-| **DNS & HTTPS** | Local DNS and HTTPS-related helpers (Hickory DNS, certificates, NGINX includes, etc.). |
+- **Root folder:** `C:\DevDock`
 
----
+Common locations:
 
-## Services overview
+- **Web root (put your site here):** `C:\DevDock\nginx\html\`
+- **NGINX config:** `C:\DevDock\nginx\conf\nginx.conf`
+- **PHP config (php.ini):** `C:\DevDock\php\php.ini`
+- **App/service logs:** `C:\DevDock\logs\`
+- **NGINX own logs:** `C:\DevDock\nginx\logs\`
+- **MySQL data folder:** `C:\DevDock\mysql\data\`
 
-| Service | Role | Typical ports / paths |
-| --- | --- | --- |
-| **NGINX** | HTTP server / static + proxy to PHP worker | `http://localhost` (port **80**), config `C:\DevDock\nginx\conf\nginx.conf` |
-| **PHP** | Built-in PHP server for NGINX document root (`*.php` via proxy) | Listens **`127.0.0.1:9000`**, doc root `C:\DevDock\nginx\html`, logs `C:\DevDock\logs\php.log`, config `C:\DevDock\php\php.ini` |
-| **MySQL** | Database server | **3306**, data under `C:\DevDock\mysql\data` |
-| **Mailpit** | Fake SMTP + web UI for captured mail | SMTP **1025**, UI **8025** |
-| **phpMyAdmin** | Web DB admin (PHP) | **`http://127.0.0.1:8080`**, tree under `C:\DevDock\phpmyadmin` |
-| **FTP** | Embedded FTP server | Config `C:\DevDock\config\ftp.json` |
-| **SQL Web** | External **sql-web** DB workbench binary | Port from `C:\DevDock\config\sql-web.json` (default **8090**) |
-
-**Note:** Starting **NGINX** can automatically start the **PHP** worker when `# devdock:auto_start_php=on` is present in `nginx.conf` (configurable from the NGINX editor UI). Stopping NGINX can stop PHP when that option is enabled.
+If you ever want to “reset” a service’s behavior, the easiest safe place to start is usually the relevant config file and the logs folder.
 
 ---
 
-## Runtime layout (`C:\DevDock`)
+## Running your PHP website / app
 
-All runtime state is under **`C:\DevDock`** (see `src-tauri/src/paths.rs`).
+### Put your files in the web root
 
-| Path | Contents |
-| --- | --- |
-| `C:\DevDock\nginx\` | NGINX prefix: `nginx.exe`, `conf\nginx.conf`, `html\` (web root), `logs\`, temp folders |
-| `C:\DevDock\nginx\html\` | **Put your site here** — HTML, PHP, assets |
-| `C:\DevDock\php\` | `php.exe`, `php.ini`, and related DLLs as shipped |
-| `C:\DevDock\mysql\` | MySQL/MariaDB binaries and `data\` |
-| `C:\DevDock\mailpit\` | Mailpit binary |
-| `C:\DevDock\phpmyadmin\` | phpMyAdmin PHP application tree |
-| `C:\DevDock\ftp\` | FTP roots / runtime (see `ftp.json`) |
-| `C:\DevDock\sql-web` or `C:\DevDock\SQLWEB` | sql-web binary + `static\` assets |
-| `C:\DevDock\config\` | JSON configs (`sql-web.json`, `ftp.json`, `local-dns.json`, etc.) |
-| `C:\DevDock\logs\` | Per-service log files (e.g. `nginx.log`, `php.log`, `mysql.log`) |
-| `C:\DevDock\templates\` | Default templates copied when missing |
-| `C:\DevDock\sqlite\` | Default location for SQLite one-click DBs |
+Copy your project’s public files into:
 
-**Bundled sources in the repo:** `services-binares/` (full) and `services-binares-pruned/` (pruned for packaging). The production bundle maps pruned resources into `services-binares/` inside the app (see `src-tauri/tauri.conf.json`).
+- `C:\DevDock\nginx\html\`
 
----
+Common entry files:
 
-## PHP: where to put files and how requests flow
+- `index.php` (recommended if you want PHP)
+- `index.html` (static site)
 
-1. Place your **`index.php`**, **`index.html`**, and other public files under:
-   - **`C:\DevDock\nginx\html\`**
-2. Ensure **NGINX** and **PHP** (worker) services are **Running** in DevDock.
-3. Open **`http://localhost/`** (or **`http://localhost/yourfile.php`**).
+### Start the required services
 
-**Request path:**
+- Start **PHP** (so PHP can execute)
+- Start **NGINX**
 
-- Static files → served by NGINX from `html\`.
-- `*.php` → NGINX proxies to the PHP built-in server on **`127.0.0.1:9000`**, which executes scripts under the same document root.
+Then open:
 
-**PHP configuration:** edit **`C:\DevDock\php\php.ini`** (from the app: **PHP** → **Config**, or **phpMyAdmin** → **Config** — both edit the same `php.ini` used by bundled PHP).
+- `http://localhost/`
+
+### Notes
+
+- If `index.php` exists, it will be used as the default homepage.
+- If PHP isn’t running, NGINX can’t execute `.php` files (you’ll see an error page and the NGINX error log will explain why).
 
 ---
 
-## Configuring each service
+## Services: what each one is for (and how to use it)
 
-| Service | Editable from app | On-disk location (typical) |
-| --- | --- | --- |
-| **NGINX** | Yes — **Config** → UI or code editor | `C:\DevDock\nginx\conf\nginx.conf` |
-| **PHP (`php.ini`)** | Yes — **PHP** or **phpMyAdmin** → Config | `C:\DevDock\php\php.ini` |
-| **MySQL** | Yes — **Config** | `C:\DevDock\mysql\my.ini` or `my.cnf` (see app) |
-| **FTP** | Yes — **Config** | `C:\DevDock\config\ftp.json` |
-| **SQL Web** | Yes — **Config** | `C:\DevDock\config\sql-web.json` |
-| **Mailpit** | Config button shown as **disabled** (no editable file in UI yet) | — |
-| **Local DNS / HTTPS** | **DNS & HTTPS** tab | `C:\DevDock\config\local-dns.json`, cert paths under `C:\DevDock\ssl\` |
+### NGINX
 
-Saving a config may **restart** the related service if it is already running (see Rust `maybe_restart_if_running` in `src-tauri/src/lib.rs`).
+- **Purpose:** Local web server for `http://localhost/`
+- **Use it for:** Serving static sites and PHP apps from `C:\DevDock\nginx\html\`
+- **Common actions:**
+  - **Start/Stop/Restart** from the NGINX card
+  - **Open Nginx** opens `http://localhost/`
+  - **Config** opens `nginx.conf` editor
 
----
+### PHP
 
-## Official documentation (external)
+- **Purpose:** Runs PHP so `.php` pages execute
+- **Use it for:** Anything that requires PHP (WordPress-style apps, custom PHP pages, admin tools, etc.)
+- **Common actions:**
+  - **Start/Stop/Restart** from the PHP card
+  - **Config** opens `php.ini` editor
+  - **Open PHP Log** opens the PHP log (and may also open the PHP config for convenience)
 
-Use these references when editing raw configs or understanding ports and directives.
+### MySQL
 
-| Topic | Documentation |
-| --- | --- |
-| **Tauri 2** | [https://v2.tauri.app/](https://v2.tauri.app/) |
-| **NGINX** | [https://nginx.org/en/docs/](https://nginx.org/en/docs/) |
-| **PHP** (INI, language) | [https://www.php.net/manual/en/](https://www.php.net/manual/en/) |
-| **MySQL / MariaDB** | [https://dev.mysql.com/doc/](https://dev.mysql.com/doc/) · [https://mariadb.com/kb/en/documentation/](https://mariadb.com/kb/en/documentation/) |
-| **Mailpit** | [https://mailpit.axllent.org/docs/](https://mailpit.axllent.org/docs/) |
-| **phpMyAdmin** | [https://docs.phpmyadmin.net/en/latest/](https://docs.phpmyadmin.net/en/latest/) |
-| **sql-web** (crate) | [https://crates.io/crates/sql-web](https://crates.io/crates/sql-web) |
-| **Rust** | [https://doc.rust-lang.org/](https://doc.rust-lang.org/) |
+- **Purpose:** Local database server
+- **Use it for:** Projects that need MySQL/MariaDB
+- **Common actions:**
+  - **Start MySQL** before phpMyAdmin
+  - **Open Data Folder** opens the MySQL data directory
+  - **Config** opens MySQL config editor (if available for your install)
 
----
+### phpMyAdmin
 
-## Repository structure
+- **Purpose:** Web UI to manage MySQL databases (tables, users, queries)
+- **Use it for:** Browsing databases, importing/exporting SQL, running queries
+- **How to use:**
+  - Start **MySQL** first
+  - Start **phpMyAdmin**
+  - Click **Open phpMyAdmin** → opens `http://127.0.0.1:8080`
+  - Use it to connect to the local MySQL service
 
-```
-DevDock/
-├── src/                    # React + Vite frontend (UI, tabs, state)
-├── src-tauri/              # Rust crate: Tauri app, service orchestration, IPC commands
-│   ├── capabilities/       # Tauri v2 ACL capabilities (permissions for plugins)
-│   ├── src/                # Rust modules (orchestrator, paths, services, FTP, DNS, …)
-│   └── tauri.conf.json     # Tauri bundle, resources, build hooks
-├── services-binares/       # Full service binary tree used in dev / staging
-├── services-binares-pruned/# Smaller tree for release bundling (see tauri.conf.json)
-├── scripts/                # prune/stage helpers for services
-├── templates/              # Default config snippets (e.g. phpMyAdmin)
-├── public/                 # Vite static assets
-├── package.json            # npm scripts
-└── README.md               # This file
-```
+### Mailpit
 
----
+- **Purpose:** Local SMTP capture + inbox viewer
+- **Use it for:** Testing emails without sending real mail to the internet
+- **How to use:**
+  - Start **Mailpit**
+  - Click **Open Mailpit** → opens `http://127.0.0.1:8025`
+  - Point your app’s SMTP settings to **127.0.0.1:1025**
 
-## Development
+### FTP
 
-**Prerequisites:** Node.js, Rust toolchain, Windows (paths and services are Windows-oriented).
+- **Purpose:** Simple local FTP server for testing uploads/downloads
+- **Use it for:** Apps that need FTP integration tests
+- **How to use:**
+  - Start **FTP**
+  - Use the built-in FTP helper (if available) or connect with an external client
+  - **Config** lets you adjust bind address/ports/root directory
 
-```powershell
-cd path\to\DevDock
-npm install
-npm run tauri dev
-```
+### SQL Web
 
-- Frontend dev server: Vite (see `devUrl` in `src-tauri/tauri.conf.json`).
-- Rust: `cargo run` via Tauri CLI.
-
-Other useful scripts:
-
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Vite only (web UI) |
-| `npm run build` | Typecheck + production Vite build |
-| `npm run prune:services` | Prune services bundle (see `scripts/prune-services.mjs`) |
-| `npm run stage:services` | Stage services (see `scripts/stage-services.mjs`) |
-
-**UX note:** In production builds, the app disables the browser-style **right-click context menu** on the webview (`src/main.tsx`) so the app feels more native.
+- **Purpose:** Browser-based DB workbench (separate from phpMyAdmin)
+- **Use it for:** A lightweight SQL UI that can connect to MySQL/SQLite (depending on your config)
+- **How to use:**
+  - Start **SQL Web**
+  - Click **Open SQL Web**
+  - Use **Config** to set connection settings (host/port/connection string)
 
 ---
 
-## Production build
+## Tabs: what each tab is for
 
-```powershell
-npm run tauri build
-```
+### List of all the service
 
-Artifacts appear under `src-tauri/target/release/` and installer output per Tauri bundle settings (NSIS/WiX on Windows).
+This is the main dashboard.
 
-The build pipeline runs `prune:services`, `stage:services`, and `npm run build` before compiling Rust (see `beforeBuildCommand` in `tauri.conf.json`).
+- **Controls:** Start/Stop/Restart services, open them, edit configs
+- **Metrics:** CPU and memory overview per running service (useful to spot “what is heavy”)
+
+### SQLite One-Click
+
+- **Purpose:** Quickly create a new `.db` file
+- **Typical use:** Create a SQLite database for a project with one click, then manage it with your preferred tools
+
+### HTTP Client
+
+- **Purpose:** Send HTTP requests from inside DevDock
+- **Use it for:** Testing local endpoints and APIs quickly (especially useful when browsers block requests due to CORS)
+
+### LogsConsole
+
+- **Purpose:** View recent log output from services
+- **Use it for:** Debugging startup failures, port issues, config mistakes, or runtime errors
+
+### Rust Workspace
+
+- **Purpose:** Helpers for Rust projects
+- **Use it for:** Discovering projects and running Rust-related workflows supported by the app
+
+### DNS & HTTPS
+
+- **Purpose:** Local development networking helpers
+- **Use it for:** Local domain testing, certificates, and HTTPS-related configuration
 
 ---
 
-## Debugging when something goes wrong
+## Changing service configuration (safe workflow)
 
-1. **LogsConsole tab** — Filter by service; lines come from `C:\DevDock\logs\<service>.log`.
-2. **On-disk logs** — Open `C:\DevDock\logs\` and read the relevant `.log` file (e.g. `nginx.log`, `php.log`, `mysql.log`).
-3. **NGINX errors** — `C:\DevDock\nginx\logs\error.log` (NGINX’s own log directory).
-4. **Service won’t start** — Check the red banner for **missing binaries**; ensure `services-binares` synced to `C:\DevDock` (restart app or run bootstrap).
-5. **PHP pages don’t run** — Confirm **PHP** service is running and port **9000** is not blocked; check `php.log` and NGINX `error.log`.
-6. **Tauri / Rust build errors** — Run `cargo build` in `src-tauri/`; clear `src-tauri/target` if build scripts get stuck.
-7. **Frontend-only issues** — `npm run build` to surface TypeScript errors.
+1. Open the service’s **Config** button (when available).
+2. Prefer the **UI Editor** for simple changes (ports, root, index, handler).
+3. Use the **Code Editor** only if you know what you’re changing.
+4. Save.
+5. If a service is already running, restart it so changes take effect.
 
 ---
 
-## Contact
+## Troubleshooting (common problems)
 
-- **Issues & contributions:** use your repository’s issue tracker (e.g. GitHub **Issues**) if this project is published there.
-- For **private forks**, document maintainer email or team chat in this section as appropriate.
+### “403 Forbidden” on `http://localhost/`
+
+Usually means there is **no index file** available in the web root.
+
+- Ensure `C:\DevDock\nginx\html\index.php` (or `index.html`) exists
+- Check NGINX config has `index index.php index.html ...;`
+- Check `C:\DevDock\nginx\logs\error.log` for the exact reason
+
+### PHP page shows an error page / PHP doesn’t execute
+
+- Make sure the **PHP service is Running**
+- Check `C:\DevDock\logs\php.log`
+- Check `C:\DevDock\nginx\logs\error.log`
+
+### phpMyAdmin can’t connect to MySQL
+
+- Start **MySQL** first, then start **phpMyAdmin**
+- If it still fails, check `C:\DevDock\logs\mysql.log` and the phpMyAdmin screen error message
+
+### Something “worked yesterday” but not now
+
+- Restart the affected service(s)
+- Check for port conflicts (another app using the same port)
+- Review logs in `C:\DevDock\logs\` and `C:\DevDock\nginx\logs\`
 
 ---
 
-## License
+## Getting help
 
-This repository does **not** currently include a `LICENSE` file at the project root. **All rights reserved** unless you add a license. To make the project open source, add a `LICENSE` file (e.g. MIT, Apache-2.0) and update this section accordingly.
+If you need support, include:
 
-Third-party binaries (NGINX, PHP, MySQL, Mailpit, etc.) are subject to **their respective upstream licenses**; redistribute only in compliance with those terms.
+- Which service/tab you were using
+- What you clicked (Start/Stop/Config/Open)
+- The relevant log files from `C:\DevDock\logs\` (and `C:\DevDock\nginx\logs\error.log` for NGINX issues)
+
