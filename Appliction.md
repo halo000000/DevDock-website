@@ -128,15 +128,6 @@ Then open:
   - Use the built-in FTP helper (if available) or connect with an external client
   - **Config** lets you adjust bind address/ports/root directory
 
-### SQL Web
-
-- **Purpose:** Browser-based DB workbench (separate from phpMyAdmin)
-- **Use it for:** A lightweight SQL UI that can connect to MySQL/SQLite (depending on your config)
-- **How to use:**
-  - Start **SQL Web**
-  - Click **Open SQL Web**
-  - Use **Config** to set connection settings (host/port/connection string)
-
 ---
 
 ## Tabs: what each tab is for
@@ -162,11 +153,6 @@ This is the main dashboard.
 
 - **Purpose:** View recent log output from services
 - **Use it for:** Debugging startup failures, port issues, config mistakes, or runtime errors
-
-### Rust Workspace
-
-- **Purpose:** Helpers for Rust projects
-- **Use it for:** Discovering projects and running Rust-related workflows supported by the app
 
 ### DNS & HTTPS
 

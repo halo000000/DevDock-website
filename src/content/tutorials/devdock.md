@@ -35,7 +35,7 @@ A common start order:
 1. **MySQL** (only if your project needs a database)
 2. **PHP** (only if your site uses PHP)
 3. **NGINX**
-4. Optional: **Mailpit**, **phpMyAdmin**, **SQL Web**, **FTP**
+4. Optional: **Mailpit**, **phpMyAdmin**, **FTP**
 
 ### 3. Open your site
 
@@ -77,11 +77,6 @@ Click **Open** on the web service in DevDock, or open `http://localhost/` in you
 
 - **What it does:** A local FTP server for testing uploads and integrations.
 - **When to run it:** Only if your project needs FTP.
-
-### SQL Web
-
-- **What it does:** A lightweight SQL interface you can open in your browser.
-- **When to run it:** When you want a quick database UI.
 
 ## Configuration guide
 
