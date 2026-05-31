@@ -130,7 +130,7 @@ This folder is the **DevDock marketing site**, built with **Astro 6** and deploy
 
 | Path | Role |
 | --- | --- |
-| `src/config/site.ts` | Site name and **GitHub Releases URL** for download buttons. |
+| `src/config/site.ts` | Site name, **GitHub Releases URL**, and **tutorial video embed URL** for `/how-to-use`. |
 | `src/pages/index.astro` | Home page. |
 | `src/pages/about.astro` | About page. |
 | `src/pages/how-to-use.astro` | Renders the tutorial from content collections. |
@@ -155,7 +155,7 @@ From the project root:
 
 ### Before you publish
 
-1. Set **`GITHUB_RELEASES_URL`** in `src/config/site.ts` to your real releases URL.
+1. Set **`GITHUB_RELEASES_URL`** and **`TUTORIAL_VIDEO_EMBED_URL`** in `src/config/site.ts` (use an embed URL for the iframe, or `''` to hide the video).
 2. Replace placeholder **developer contact** details on the About page if you used placeholders.
 3. Review **`privacy.astro`** and fill in real contact emails and any product-specific data practices.
 4. Swap marketing images under `public/images/` as needed.

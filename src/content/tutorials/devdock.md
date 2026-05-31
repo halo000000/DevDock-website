@@ -1,7 +1,6 @@
 ---
 title: How to use DevDock
 description: "Install DevDock, start the services you need, configure them, and troubleshoot common issues."
-videoEmbedUrl: https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ
 ---
 
 ## Install

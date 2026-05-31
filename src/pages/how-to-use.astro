@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
 import { ArrowRight } from '@lucide/astro';
-import { SITE_NAME } from '../config/site';
+import { SITE_NAME, TUTORIAL_VIDEO_EMBED_URL } from '../config/site';
 
 const entries = await getCollection('tutorials');
 const tutorial =
@@ -15,7 +15,7 @@ if (!tutorial) {
 }
 
 const { Content, headings } = await render(tutorial);
-const videoEmbedUrl = tutorial.data.videoEmbedUrl;
+const videoEmbedUrl = TUTORIAL_VIDEO_EMBED_URL.trim() || undefined;
 
 type TocHeading = { depth: number; slug: string; text: string };
 const tocHeadings = (headings as TocHeading[]).filter((h) => h.depth >= 2 && h.depth <= 3);
