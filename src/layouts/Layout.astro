@@ -7,23 +7,178 @@ type Props = {
 	description?: string;
 };
 
-const { title = 'DevDock', description = 'DevDock - local web services for Windows.' } =
+const { title = 'Qazwan — Systems for modern companies', description = 'Qazwan delivers offline-first POS, CMS, finance (AIS), warehouse (WMS), HR, clinic (CPMS), and property (REMS) software. Install on your hardware, own your data, train teams fast.' } =
 	Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
+		<!-- 1. PRIMARY METADATA & SEO -->
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/icon/32x32.png" />
-		<link rel="icon" type="image/png" sizes="64x64" href="/icon/64x64.png" />
-		<link rel="apple-touch-icon" href="/icon/128x128.png" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<meta name="keywords" content="Qazwan, offline POS, retail software, inventory management, HR software, property management, clinic software, pharmacy POS, AIS accounting, WMS, IDBMS, CMS, REMS, CPMS, desktop business software" />
+		<meta name="author" content="Qazwan" />
+		<meta name="creator" content="Qazwan" />
+		<meta name="publisher" content="Qazwan" />
+		<meta name="copyright" content="© 2026 Qazwan" />
+		<meta name="language" content="en" />
+		<meta name="rating" content="general" />
+		<meta name="referrer" content="strict-origin-when-cross-origin" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- 2. ROBOTS & SEARCH ENGINE DIRECTIVES -->
+		<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+		<meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+		<meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+		<!-- 3. BROWSER & APP THEMING -->
+		<meta name="application-name" content="Qazwan" />
+		<meta name="theme-color" content="#00bc7d" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#00bc7d" media="(prefers-color-scheme: dark)" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+
+		<!-- 4. APPLE / iOS METADATA -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+		<meta name="apple-mobile-web-app-title" content="Qazwan" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00bc7d" />
+
+		<!-- 5. ANDROID / CHROME METADATA -->
+		<meta name="mobile-web-app-capable" content="yes" />
+		<link rel="manifest" href="/site.webmanifest" />
+
+		<!-- 6. MICROSOFT / WINDOWS METADATA -->
+		<meta name="msapplication-TileColor" content="#00bc7d" />
+		<meta name="msapplication-config" content="/browserconfig.xml" />
+		<meta name="msapplication-tooltip" content="Offline-first business software for retail, finance, HR, and operations" />
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<!-- 7. OPEN GRAPH (FACEBOOK/LINKEDIN/DISCORD) -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Qazwan" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content="https://devdocks.xyz/" />
+		<meta property="og:image" content="https://devdocks.xyz/images/og.png" />
+		<meta property="og:image:secure_url" content="https://devdocks.xyz/images/og.png" />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1448" />
+		<meta property="og:image:height" content="1086" />
+		<meta property="og:image:alt" content="Qazwan — offline-first business software for retail, finance, HR, and operations" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:locale:alternate" content="en_GB" />
+
+		<!-- 8. TWITTER CARDS (X) -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content="@qazwan" />
+		<meta name="twitter:creator" content="@qazwan" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content="https://devdocks.xyz/images/og.png" />
+		<meta name="twitter:image:alt" content="Qazwan — offline-first business software for retail, finance, HR, and operations" />
+
+		<!-- 9. SCHEMA.ORG MICRODATA (HTML FALLBACK) -->
+		<meta itemprop="name" content={title} />
+		<meta itemprop="description" content={description} />
+		<meta itemprop="image" content="https://devdocks.xyz/images/og.png" />
+		<meta itemprop="url" content="https://devdocks.xyz/" />
+
+		<!-- 10. DUBLIN CORE (ACADEMIC / ARCHIVAL) -->
+		<meta name="DC.title" content={title} />
+		<meta name="DC.creator" content="Qazwan" />
+		<meta name="DC.subject" content="Offline-first business software for modern companies" />
+		<meta name="DC.description" content={description} />
+		<meta name="DC.publisher" content="Qazwan" />
+		<meta name="DC.date" content="2026-06-06" />
+		<meta name="DC.type" content="Text" />
+		<meta name="DC.format" content="text/html" />
+		<meta name="DC.identifier" content="https://devdocks.xyz/" />
+		<meta name="DC.language" content="en" />
+		<meta name="DC.coverage" content="World" />
+		<meta name="DC.rights" content="© 2026 Qazwan" />
+
+		<!-- 11. GEO TAGS (LOCATION METADATA) -->
+		<meta name="geo.region" content="US" />
+		<meta name="geo.placename" content="Your City" />
+		<meta name="geo.position" content="0.0000;0.0000" />
+		<meta name="ICBM" content="0.0000, 0.0000" />
+
+		<!-- 12. PINTEREST & OTHER PLATFORMS -->
+		<meta name="pinterest-rich-pin" content="true" />
+
+		<!-- 13. CANONICAL, ALTERNATE, & ASSET LINKS -->
+		<link rel="canonical" href="https://devdocks.xyz/" />
+		<link rel="alternate" hreflang="en" href="https://devdocks.xyz/" />
+		<link rel="alternate" hreflang="x-default" href="https://devdocks.xyz/" />
+		<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+		<link rel="author" type="text/plain" href="/humans.txt" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/icon/32x32.png" />
+		<link rel="icon" type="image/png" sizes="64x64" href="/icon/64x64.png" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="image_src" href="https://devdocks.xyz/images/og.png" />
+
+		<!-- 14. RESOURCE HINTS (PERFORMANCE) -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+		<!-- 15. CSS / JS ASSETS -->
+		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+
+		<!-- 16. JSON-LD STRUCTURED DATA (SCHEMA.ORG) -->
+		<script id="qazwan-jsonld" type="application/ld+json" is:inline>
+		{
+		  "@context": "https://schema.org",
+		  "@graph": [
+			{
+			  "@type": "Organization",
+			  "@id": "https://devdocks.xyz/#organization",
+			  "name": "Qazwan",
+			  "url": "https://devdocks.xyz",
+			  "logo": "https://devdocks.xyz/images/og.png",
+			  "email": "hello@devdocks.xyz",
+			  "description": "Offline-first business software for retail, finance, HR, and operations"
+			},
+			{
+			  "@type": "WebSite",
+			  "@id": "https://devdocks.xyz/#website",
+			  "url": "https://devdocks.xyz",
+			  "name": "Qazwan",
+			  "description": "Offline-first business software for retail, finance, HR, and operations",
+			  "publisher": { "@id": "https://devdocks.xyz/#organization" },
+			  "inLanguage": "en",
+			  "potentialAction": {
+				"@type": "SearchAction",
+				"target": "https://devdocks.xyz/docs/platform/overview?q={search_term_string}",
+				"query-input": "required name=search_term_string"
+			  }
+			},
+			{
+			  "@type": "WebPage",
+			  "@id": "https://devdocks.xyz/#webpage",
+			  "url": "https://devdocks.xyz/",
+			  "name": "Qazwan — Systems for modern companies",
+			  "description": "Qazwan delivers database management systems for POS, CMS, finance (AIS), warehouse (WMS), HR, clinic (CPMS), and property (REMS) software.",
+			  "isPartOf": { "@id": "https://devdocks.xyz/#website" },
+			  "about": { "@id": "https://devdocks.xyz/#organization" },
+			  "inLanguage": "en",
+			  "primaryImageOfPage": {
+				"@type": "ImageObject",
+				"url": "https://devdocks.xyz/images/og.png",
+				"width": 1448,
+				"height": 1086
+			  }
+			}
+		  ]
+		}
+		</script>
 	</head>
 	<body>
 		<a class="skipLink" href="#main">Skip to content</a>

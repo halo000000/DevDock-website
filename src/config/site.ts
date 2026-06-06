@@ -10,3 +10,6 @@ export const GITHUB_RELEASES_URL = 'https://github.com/halo000000/DevDock-websit
  */
 export const TUTORIAL_VIDEO_EMBED_URL =
 	'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ000';
+
+
+
