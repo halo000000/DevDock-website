@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /
+Allow: /$
+Allow: /about/
+Allow: /how-to-use/
+
+Sitemap: https://devdocks.xyz/sitemap.xml
